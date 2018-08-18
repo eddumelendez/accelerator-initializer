@@ -29,44 +29,43 @@ import com.scotiabank.accelerator.initializer.core.creator.FileCreator;
 import com.google.common.collect.Lists;
 
 public class JavaPackageCreatorTest {
-    
-    @Mock
-    private FileProcessor fileProcessor;
-    @Captor
-    private ArgumentCaptor<File> fileCaptor;
-    private FileCreator<ProjectCreation> creator;
-    
-    @Before
-    public void before() {
-        MockitoAnnotations.initMocks(this);
-        this.creator = new JavaPackageCreator(fileProcessor);
-    }
-    
-    @Test
-    public void assertOrder() {
-        assertTrue(creator.order() == FileCreationOrder.JAVA_PACKAGES.order());
-        assertTrue(creator.order() > FileCreationOrder.SRC_FOLDER.order());
-    }
-    
-    @Test
-    public void assertPackagePathIsCreated() {
-        ProjectCreation request = ProjectCreation.builder()
-                        .group("hopper")
-                        .rootDir(".")
-                        .build();
-        this.creator.create(request);
-        verify(this.fileProcessor, times(2)).createDirectories(fileCaptor.capture());
-        
-        List<Path> collectedPaths = fileCaptor.getAllValues()
-                  .stream()
-                  .map(File::toPath)
-                  .collect(Collectors.toList());
-        assertEquals(paths(), collectedPaths);
-        
-    }
-    
-    private List<Path> paths() {
-        return Lists.newArrayList(Paths.get("./src/main/java/com/hopper"),
-                Paths.get("./src/test/java/com/hopper"));
-    }
+
+	@Mock
+	private FileProcessor fileProcessor;
+
+	@Captor
+	private ArgumentCaptor<File> fileCaptor;
+
+	private FileCreator<ProjectCreation> creator;
+
+	@Before
+	public void before() {
+		MockitoAnnotations.initMocks(this);
+		this.creator = new JavaPackageCreator(fileProcessor);
+	}
+
+	@Test
+	public void assertOrder() {
+		assertTrue(creator.order() == FileCreationOrder.JAVA_PACKAGES.order());
+		assertTrue(creator.order() > FileCreationOrder.SRC_FOLDER.order());
+	}
+
+	@Test
+	public void assertPackagePathIsCreated() {
+		ProjectCreation request = ProjectCreation.builder().group("hopper").rootDir(".")
+				.build();
+		this.creator.create(request);
+		verify(this.fileProcessor, times(2)).createDirectories(fileCaptor.capture());
+
+		List<Path> collectedPaths = fileCaptor.getAllValues().stream().map(File::toPath)
+				.collect(Collectors.toList());
+		assertEquals(paths(), collectedPaths);
+
+	}
+
+	private List<Path> paths() {
+		return Lists.newArrayList(Paths.get("./src/main/java/com/hopper"),
+				Paths.get("./src/test/java/com/hopper"));
+	}
+
 }

@@ -5,11 +5,11 @@
 package com.scotiabank.accelerator.initializer.core.creator;
 
 public interface FileCreator<T> {
-    
-    default int order() {
-        return 0;
-    }
-    
-    void create(T request);
-    
+
+	default int order() {
+		return 0;
+	}
+
+	void create(T request);
+
 }

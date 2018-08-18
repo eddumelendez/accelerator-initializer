@@ -24,26 +24,28 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @React
 class IndexHtmlCreator implements FileCreator<ProjectCreation> {
 
-    static final String INDEX_HTML_TPL_PATH = "projectCreation/react/index.html.tpl";
-    private final FileProcessor fileProcessor;
+	static final String INDEX_HTML_TPL_PATH = "projectCreation/react/index.html.tpl";
 
-    public IndexHtmlCreator(FileProcessor fileProcessor) {
-        this.fileProcessor = checkNotNull(fileProcessor);
-    }
+	private final FileProcessor fileProcessor;
 
-    @Override
-    public void create(ProjectCreation request) {
-        log.info("Creating index.html file");
-        Path srcPath = Paths.get(request.getRootDir(), SrcFolderCreator.SRC_PATH);
-        Path indexHtmlPath = Paths.get("index.html");
-        File packageJson = fileProcessor.touch(srcPath.resolve(indexHtmlPath));
-        writeContentTo(packageJson, request);
-    }
-    
-    private void writeContentTo(File packageJson, ProjectCreation request) {
-        String repoNameValue = request.getName().toLowerCase();
-        String content = fileProcessor.processTemplate(INDEX_HTML_TPL_PATH, ImmutableMap.of("REPO_NAME", repoNameValue));
-        fileProcessor.writeContentTo(packageJson, content);
-    }
+	public IndexHtmlCreator(FileProcessor fileProcessor) {
+		this.fileProcessor = checkNotNull(fileProcessor);
+	}
+
+	@Override
+	public void create(ProjectCreation request) {
+		log.info("Creating index.html file");
+		Path srcPath = Paths.get(request.getRootDir(), SrcFolderCreator.SRC_PATH);
+		Path indexHtmlPath = Paths.get("index.html");
+		File packageJson = fileProcessor.touch(srcPath.resolve(indexHtmlPath));
+		writeContentTo(packageJson, request);
+	}
+
+	private void writeContentTo(File packageJson, ProjectCreation request) {
+		String repoNameValue = request.getName().toLowerCase();
+		String content = fileProcessor.processTemplate(INDEX_HTML_TPL_PATH,
+				ImmutableMap.of("REPO_NAME", repoNameValue));
+		fileProcessor.writeContentTo(packageJson, content);
+	}
 
 }

@@ -22,20 +22,23 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Slf4j
 @React
 class BabelrcCreator implements FileCreator<ProjectCreation> {
-    @VisibleForTesting
-    static final String BABEL_RC_TEMPLATE_PATH = "templates/projectCreation/react/babelrc.tpl";
-    private final FileProcessor fileProcessor;
 
-    public BabelrcCreator(FileProcessor fileProcessor) {
-        this.fileProcessor = checkNotNull(fileProcessor);
-    }
-    
-    @Override
-    public void create(ProjectCreation request) {
-        log.info("Creating .babelrc file");
-        InputStream inputStream = this.fileProcessor.loadResourceFromClassPath(BABEL_RC_TEMPLATE_PATH);
-        File file = this.fileProcessor.touch(Paths.get(request.getRootDir(), ".babelrc"));
-        this.fileProcessor.copy(inputStream, file);
-    }
+	@VisibleForTesting
+	static final String BABEL_RC_TEMPLATE_PATH = "templates/projectCreation/react/babelrc.tpl";
+
+	private final FileProcessor fileProcessor;
+
+	public BabelrcCreator(FileProcessor fileProcessor) {
+		this.fileProcessor = checkNotNull(fileProcessor);
+	}
+
+	@Override
+	public void create(ProjectCreation request) {
+		log.info("Creating .babelrc file");
+		InputStream inputStream = this.fileProcessor
+				.loadResourceFromClassPath(BABEL_RC_TEMPLATE_PATH);
+		File file = this.fileProcessor.touch(Paths.get(request.getRootDir(), ".babelrc"));
+		this.fileProcessor.copy(inputStream, file);
+	}
 
 }

@@ -25,25 +25,29 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Node
 class ConfJsCreator implements FileCreator<ProjectCreation> {
 
-    private static final String CONF_JS_TPL_PATH = "templates/projectCreation/node/conf.js.tpl";
-    private final FileProcessor fileProcessor;
+	private static final String CONF_JS_TPL_PATH = "templates/projectCreation/node/conf.js.tpl";
 
-    public ConfJsCreator(FileProcessor fileProcessor) {
-        this.fileProcessor = checkNotNull(fileProcessor);
-    }
+	private final FileProcessor fileProcessor;
 
-    @Override
-    public void create(ProjectCreation request) {
-        log.info("Creating conf.js file");
-        InputStream inputStream = this.fileProcessor.loadResourceFromClassPath(CONF_JS_TPL_PATH);
-        Path integrationTestPath = Paths.get(request.getRootDir(), IntegrationTestFolderCreator.INTEGRATION_TEST_PATH);
-        Path confJsPath = Paths.get("conf.js");
-        File confJs = fileProcessor.touch(integrationTestPath.resolve(confJsPath));
-        this.fileProcessor.copy(inputStream, confJs);
-    }
-    
-    @Override
-    public int order() {
-        return FileCreationOrder.CONF_JS.order();
-    }
+	public ConfJsCreator(FileProcessor fileProcessor) {
+		this.fileProcessor = checkNotNull(fileProcessor);
+	}
+
+	@Override
+	public void create(ProjectCreation request) {
+		log.info("Creating conf.js file");
+		InputStream inputStream = this.fileProcessor
+				.loadResourceFromClassPath(CONF_JS_TPL_PATH);
+		Path integrationTestPath = Paths.get(request.getRootDir(),
+				IntegrationTestFolderCreator.INTEGRATION_TEST_PATH);
+		Path confJsPath = Paths.get("conf.js");
+		File confJs = fileProcessor.touch(integrationTestPath.resolve(confJsPath));
+		this.fileProcessor.copy(inputStream, confJs);
+	}
+
+	@Override
+	public int order() {
+		return FileCreationOrder.CONF_JS.order();
+	}
+
 }

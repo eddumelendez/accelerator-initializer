@@ -25,23 +25,26 @@ import lombok.extern.slf4j.Slf4j;
 @JavaLibrary
 class PackageInfoCreator implements FileCreator<ProjectCreation> {
 
-    private final FileProcessor fileProcessor;
+	private final FileProcessor fileProcessor;
 
-    public PackageInfoCreator(FileProcessor fileProcessor) {
-        this.fileProcessor = checkNotNull(fileProcessor);
-    }
-    
-    @Override
-    public void create(ProjectCreation request) {
-        log.info("Creating package-info.java file");
-        Path srcPath = Paths.get(request.getRootDir(), CreatorConstants.SRC_TEST_JAVA_PATH);
-        Path packagePath = Paths.get("com", request.getGroup().toLowerCase(), "package-info.java");
-        new PackageInfo(fileProcessor)
-            .create(srcPath.resolve(packagePath), request.resolvePackageName());
-    }
-    
-    @Override
-    public int order() {
-        return FileCreationOrder.PACKAGE_INFO_TEST.order();
-    }
+	public PackageInfoCreator(FileProcessor fileProcessor) {
+		this.fileProcessor = checkNotNull(fileProcessor);
+	}
+
+	@Override
+	public void create(ProjectCreation request) {
+		log.info("Creating package-info.java file");
+		Path srcPath = Paths.get(request.getRootDir(),
+				CreatorConstants.SRC_TEST_JAVA_PATH);
+		Path packagePath = Paths.get("com", request.getGroup().toLowerCase(),
+				"package-info.java");
+		new PackageInfo(fileProcessor).create(srcPath.resolve(packagePath),
+				request.resolvePackageName());
+	}
+
+	@Override
+	public int order() {
+		return FileCreationOrder.PACKAGE_INFO_TEST.order();
+	}
+
 }

@@ -15,36 +15,41 @@ import lombok.Getter;
  */
 @Getter
 public class InitializerException extends RuntimeException {
-    private static final long serialVersionUID = -5109086597065648350L;
-    private final Object[] args;
-    private final HttpStatus status;
 
-    public InitializerException(String message, Object... args) {
-        super(message);
-        this.args = args;
-        this.status = HttpStatus.INTERNAL_SERVER_ERROR;
-    }
+	private static final long serialVersionUID = -5109086597065648350L;
 
-    public InitializerException(String message, HttpStatus status, Object... args) {
-        super(message);
-        this.args = args;
-        this.status = status;
-    }
+	private final Object[] args;
 
-    public InitializerException(String message, Throwable cause, Object... args) {
-        super(message, cause);
-        this.args = args;
-        this.status = HttpStatus.INTERNAL_SERVER_ERROR;
-    }
+	private final HttpStatus status;
 
-    public InitializerException(String message, HttpStatus status, Throwable cause, Object... args) {
-        super(message, cause);
-        this.args = args;
-        this.status = status;
-    }
+	public InitializerException(String message, Object... args) {
+		super(message);
+		this.args = args;
+		this.status = HttpStatus.INTERNAL_SERVER_ERROR;
+	}
 
-    @Override
-    public String toString() {
-        return Throwables.getStackTraceAsString(super.getCause());
-    }
+	public InitializerException(String message, HttpStatus status, Object... args) {
+		super(message);
+		this.args = args;
+		this.status = status;
+	}
+
+	public InitializerException(String message, Throwable cause, Object... args) {
+		super(message, cause);
+		this.args = args;
+		this.status = HttpStatus.INTERNAL_SERVER_ERROR;
+	}
+
+	public InitializerException(String message, HttpStatus status, Throwable cause,
+			Object... args) {
+		super(message, cause);
+		this.args = args;
+		this.status = status;
+	}
+
+	@Override
+	public String toString() {
+		return Throwables.getStackTraceAsString(super.getCause());
+	}
+
 }

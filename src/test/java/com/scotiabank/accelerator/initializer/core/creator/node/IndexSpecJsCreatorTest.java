@@ -34,46 +34,47 @@ import static org.mockito.Mockito.when;
 
 public class IndexSpecJsCreatorTest {
 
-    @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
+	@Rule
+	public TemporaryFolder folder = new TemporaryFolder();
 
-    @Mock
-    private FileProcessor fileProcessor;
-    @Captor
-    private ArgumentCaptor<Path> pathCaptor;
+	@Mock
+	private FileProcessor fileProcessor;
 
-    private FileCreator<ProjectCreation> creator;
-    
-    @Before
-    public void before() {
-        MockitoAnnotations.initMocks(this);
-        this.creator = new IndexSpecJsCreator(fileProcessor);
-    }
-    
-    @Test
-    public void assertOrder() {
-        assertTrue(creator.order() == FileCreationOrder.INDEX_SPEC_JS.order());
-        assertTrue(creator.order() > FileCreationOrder.TEST_FOLDER.order());
-    }
+	@Captor
+	private ArgumentCaptor<Path> pathCaptor;
 
-    @Test
-    public void assertIndexSpecJsIsCreated() {
-        ProjectCreation request = ProjectCreation.builder()
-                        .rootDir(".")
-                        .build();
-        this.creator.create(request);
-        verify(this.fileProcessor, times(1)).touch(pathCaptor.capture());
-        Path indexJsPath = pathCaptor.getValue();
-        assertEquals(Paths.get("./test/index_spec.js"), indexJsPath);
-    }
+	private FileCreator<ProjectCreation> creator;
 
-    @Test
-    public void assertItCopiesContentToFile() throws IOException {
-        File f = folder.newFile("index_spec.js");
-        when(this.fileProcessor.loadResourceFromClassPath(anyString())).thenReturn(new FileInputStream(f));
-        when(this.fileProcessor.touch(any())).thenReturn(f);
-        ProjectCreation request = ProjectCreation.builder().rootDir(".").build();
-        creator.create(request);
-        verify(this.fileProcessor, times(1)).copy(any(), eq(f));
-    }
+	@Before
+	public void before() {
+		MockitoAnnotations.initMocks(this);
+		this.creator = new IndexSpecJsCreator(fileProcessor);
+	}
+
+	@Test
+	public void assertOrder() {
+		assertTrue(creator.order() == FileCreationOrder.INDEX_SPEC_JS.order());
+		assertTrue(creator.order() > FileCreationOrder.TEST_FOLDER.order());
+	}
+
+	@Test
+	public void assertIndexSpecJsIsCreated() {
+		ProjectCreation request = ProjectCreation.builder().rootDir(".").build();
+		this.creator.create(request);
+		verify(this.fileProcessor, times(1)).touch(pathCaptor.capture());
+		Path indexJsPath = pathCaptor.getValue();
+		assertEquals(Paths.get("./test/index_spec.js"), indexJsPath);
+	}
+
+	@Test
+	public void assertItCopiesContentToFile() throws IOException {
+		File f = folder.newFile("index_spec.js");
+		when(this.fileProcessor.loadResourceFromClassPath(anyString()))
+				.thenReturn(new FileInputStream(f));
+		when(this.fileProcessor.touch(any())).thenReturn(f);
+		ProjectCreation request = ProjectCreation.builder().rootDir(".").build();
+		creator.create(request);
+		verify(this.fileProcessor, times(1)).copy(any(), eq(f));
+	}
+
 }

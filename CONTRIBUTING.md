@@ -14,7 +14,10 @@ When submitting code:
    * When creating new API endpoints ensure they are documented to allow Swagger generation
    * TODO: Pick a style guide to follow
 
-2. Write tests:
+2. Code Formatter
+   * Ensure your code is formatted. Currently, the project is using [spring-javaformat](https://github.com/spring-io/spring-javaformat). 
+
+3. Write tests:
    * Ensure your code is covered by unit tests
       * Unit tests will test individual classes and methods
       * Unit test coverage required: 80%
@@ -27,17 +30,17 @@ When submitting code:
       * Integration test coverage will be measured separately
       * Integration test coverage target: 90% (currently much lower, but enforcement will slowly increase)
 
-3. Ensure you can build
+4. Ensure you can build
    ```
    gradlew clean assemble
    ```
    
-4. Ensure all tests pass
+5. Ensure all tests pass
    ```
    gradlew check
    ```
    
-5. Submit a pull request with your changes
+6. Submit a pull request with your changes
    * Give your pull request a descriptive title
    * Include a description of the changes you've made
       * Summarize the changes

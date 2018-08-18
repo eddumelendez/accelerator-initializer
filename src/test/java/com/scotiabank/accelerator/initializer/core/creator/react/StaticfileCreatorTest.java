@@ -28,41 +28,44 @@ import static org.mockito.Mockito.when;
 
 public class StaticfileCreatorTest {
 
-    @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
+	@Rule
+	public TemporaryFolder folder = new TemporaryFolder();
 
-    @Mock
-    private FileProcessor fileProcessor;
-    
-    private FileCreator<ProjectCreation> creator;
+	@Mock
+	private FileProcessor fileProcessor;
 
-    @Before
-    public void before() {
-        MockitoAnnotations.initMocks(this);
-        this.creator = new StaticfileCreator(fileProcessor);
-    }
+	private FileCreator<ProjectCreation> creator;
 
-    @Test
-    public void assertItLoadsStaticfileTemplate() {
-        ProjectCreation request = ProjectCreation.builder().rootDir(".").build();
-        creator.create(request);
-        verify(this.fileProcessor, times(1)).loadResourceFromClassPath(StaticfileCreator.STATICFILE_TEMPLATE_PATH);
-    }
-    
-    @Test
-    public void assertItCreateFile() {
-        ProjectCreation request = ProjectCreation.builder().rootDir(".").build();
-        creator.create(request);
-        verify(this.fileProcessor, times(1)).touch(Paths.get("./Staticfile"));
-    }
-    
-    @Test
-    public void assertItCopiesContentToFile() throws IOException {
-        File f = folder.newFile("Staticfile");
-        when(this.fileProcessor.loadResourceFromClassPath(anyString())).thenReturn(new FileInputStream(f));
-        when(this.fileProcessor.touch(any())).thenReturn(f);
-        ProjectCreation request = ProjectCreation.builder().rootDir(".").build();
-        creator.create(request);
-        verify(this.fileProcessor, times(1)).copy(any(), eq(f));
-    }
+	@Before
+	public void before() {
+		MockitoAnnotations.initMocks(this);
+		this.creator = new StaticfileCreator(fileProcessor);
+	}
+
+	@Test
+	public void assertItLoadsStaticfileTemplate() {
+		ProjectCreation request = ProjectCreation.builder().rootDir(".").build();
+		creator.create(request);
+		verify(this.fileProcessor, times(1))
+				.loadResourceFromClassPath(StaticfileCreator.STATICFILE_TEMPLATE_PATH);
+	}
+
+	@Test
+	public void assertItCreateFile() {
+		ProjectCreation request = ProjectCreation.builder().rootDir(".").build();
+		creator.create(request);
+		verify(this.fileProcessor, times(1)).touch(Paths.get("./Staticfile"));
+	}
+
+	@Test
+	public void assertItCopiesContentToFile() throws IOException {
+		File f = folder.newFile("Staticfile");
+		when(this.fileProcessor.loadResourceFromClassPath(anyString()))
+				.thenReturn(new FileInputStream(f));
+		when(this.fileProcessor.touch(any())).thenReturn(f);
+		ProjectCreation request = ProjectCreation.builder().rootDir(".").build();
+		creator.create(request);
+		verify(this.fileProcessor, times(1)).copy(any(), eq(f));
+	}
+
 }

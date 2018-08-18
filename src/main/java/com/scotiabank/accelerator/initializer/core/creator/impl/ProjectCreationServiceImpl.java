@@ -23,41 +23,42 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Slf4j
 class ProjectCreationServiceImpl implements ProjectCreationService {
 
+	private final List<ProjectCreator<ProjectCreation>> projectCreators;
 
-    private final List<ProjectCreator<ProjectCreation>> projectCreators;
-    private final ApplicationEventPublisher publisher;
-    private final FileProcessor fileProcessor;
-    private final ZipFile zipFile;
+	private final ApplicationEventPublisher publisher;
 
-    public ProjectCreationServiceImpl(List<ProjectCreator<ProjectCreation>> projectCreators,
-                                      ApplicationEventPublisher publisher,
-                                      FileProcessor fileProcessor,
-                                      ZipFile zipFile) {
-        this.zipFile = checkNotNull(zipFile);
-        this.fileProcessor = checkNotNull(fileProcessor);
-        this.publisher = checkNotNull(publisher);
-        this.projectCreators = checkNotNull(projectCreators);
-    }
+	private final FileProcessor fileProcessor;
 
-    @Override
-    public byte[] create(ProjectCreation projectCreation) {
-        this.projectCreators
-            .stream()
-            .filter(creator -> !creator.skip(projectCreation))
-            .forEach(creator -> creator.create(projectCreation));
+	private final ZipFile zipFile;
 
-        byte[] content = createZipAndConvertToByteArray(projectCreation.getRootDir());
-        dispatchCleanUpEvent(projectCreation);
-        return content;
-    }
+	public ProjectCreationServiceImpl(
+			List<ProjectCreator<ProjectCreation>> projectCreators,
+			ApplicationEventPublisher publisher, FileProcessor fileProcessor,
+			ZipFile zipFile) {
+		this.zipFile = checkNotNull(zipFile);
+		this.fileProcessor = checkNotNull(fileProcessor);
+		this.publisher = checkNotNull(publisher);
+		this.projectCreators = checkNotNull(projectCreators);
+	}
 
-    private void dispatchCleanUpEvent(ProjectCreation projectCreation) {
-        publisher.publishEvent(new InitializerCleanUpEvent(projectCreation.getRootDir()));
-    }
+	@Override
+	public byte[] create(ProjectCreation projectCreation) {
+		this.projectCreators.stream().filter(creator -> !creator.skip(projectCreation))
+				.forEach(creator -> creator.create(projectCreation));
 
-    private byte[] createZipAndConvertToByteArray(String rootDir) {
-        File zip = this.zipFile.zip(rootDir);
-        return this.fileProcessor.fileToByteArray(zip);
+		byte[] content = createZipAndConvertToByteArray(projectCreation.getRootDir());
+		dispatchCleanUpEvent(projectCreation);
+		return content;
+	}
 
-    }
+	private void dispatchCleanUpEvent(ProjectCreation projectCreation) {
+		publisher.publishEvent(new InitializerCleanUpEvent(projectCreation.getRootDir()));
+	}
+
+	private byte[] createZipAndConvertToByteArray(String rootDir) {
+		File zip = this.zipFile.zip(rootDir);
+		return this.fileProcessor.fileToByteArray(zip);
+
+	}
+
 }

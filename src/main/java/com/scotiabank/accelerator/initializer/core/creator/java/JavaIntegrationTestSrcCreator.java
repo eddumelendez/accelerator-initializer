@@ -19,23 +19,28 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Component
 @SpringBoot
 class JavaIntegrationTestSrcCreator implements FileCreator<ProjectCreation> {
-    
-    private static final String SRC_INTEGRATION_TEST_RESOURCES = "src/acceptanceTest/resources";
-    private static final String SRC_INTEGRATION_TEST_JAVA = "src/acceptanceTest/java";
-    private final FileProcessor processor;
 
-    public JavaIntegrationTestSrcCreator(FileProcessor processor) {
-        this.processor = checkNotNull(processor);
-    }
-    
-    @Override
-    public void create(ProjectCreation request) {
-        processor.createDirectories(Paths.get(request.getRootDir(), SRC_INTEGRATION_TEST_JAVA).toFile());
-        processor.createDirectories(Paths.get(request.getRootDir(), SRC_INTEGRATION_TEST_RESOURCES).toFile());
-    }
-    
-    @Override
-    public int order() {
-        return FileCreationOrder.JAVA_INTEGRATION_TEST_FOLDER.order();
-    }
+	private static final String SRC_INTEGRATION_TEST_RESOURCES = "src/acceptanceTest/resources";
+
+	private static final String SRC_INTEGRATION_TEST_JAVA = "src/acceptanceTest/java";
+
+	private final FileProcessor processor;
+
+	public JavaIntegrationTestSrcCreator(FileProcessor processor) {
+		this.processor = checkNotNull(processor);
+	}
+
+	@Override
+	public void create(ProjectCreation request) {
+		processor.createDirectories(
+				Paths.get(request.getRootDir(), SRC_INTEGRATION_TEST_JAVA).toFile());
+		processor.createDirectories(
+				Paths.get(request.getRootDir(), SRC_INTEGRATION_TEST_RESOURCES).toFile());
+	}
+
+	@Override
+	public int order() {
+		return FileCreationOrder.JAVA_INTEGRATION_TEST_FOLDER.order();
+	}
+
 }

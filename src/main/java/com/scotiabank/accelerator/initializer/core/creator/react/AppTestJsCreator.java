@@ -25,25 +25,28 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @React
 class AppTestJsCreator implements FileCreator<ProjectCreation> {
 
-    private static final String APP_TEST_JS_TPL_PATH = "templates/projectCreation/react/App.test.js.tpl";
-    private final FileProcessor fileProcessor;
+	private static final String APP_TEST_JS_TPL_PATH = "templates/projectCreation/react/App.test.js.tpl";
 
-    public AppTestJsCreator(FileProcessor fileProcessor) {
-        this.fileProcessor = checkNotNull(fileProcessor);
-    }
+	private final FileProcessor fileProcessor;
 
-    @Override
-    public void create(ProjectCreation request) {
-        log.info("Creating App.test.js file");
-        InputStream inputStream = this.fileProcessor.loadResourceFromClassPath(APP_TEST_JS_TPL_PATH);
-        Path appPath = Paths.get(request.getRootDir(), TestFolderCreator.TEST_PATH);
-        Path appTestJsPath = Paths.get("App.test.js");
-        File appTestJs = fileProcessor.touch(appPath.resolve(appTestJsPath));
-        this.fileProcessor.copy(inputStream, appTestJs);
-    }
-    
-    @Override
-    public int order() {
-        return FileCreationOrder.APP_TEST_JS.order();
-    }
+	public AppTestJsCreator(FileProcessor fileProcessor) {
+		this.fileProcessor = checkNotNull(fileProcessor);
+	}
+
+	@Override
+	public void create(ProjectCreation request) {
+		log.info("Creating App.test.js file");
+		InputStream inputStream = this.fileProcessor
+				.loadResourceFromClassPath(APP_TEST_JS_TPL_PATH);
+		Path appPath = Paths.get(request.getRootDir(), TestFolderCreator.TEST_PATH);
+		Path appTestJsPath = Paths.get("App.test.js");
+		File appTestJs = fileProcessor.touch(appPath.resolve(appTestJsPath));
+		this.fileProcessor.copy(inputStream, appTestJs);
+	}
+
+	@Override
+	public int order() {
+		return FileCreationOrder.APP_TEST_JS.order();
+	}
+
 }

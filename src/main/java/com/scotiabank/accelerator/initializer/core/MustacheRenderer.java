@@ -43,8 +43,8 @@ public class MustacheRenderer {
 	private boolean cache = true;
 
 	private final Compiler mustache;
-	private final ConcurrentMap<String, Template> templateCaches =
-			new ConcurrentReferenceHashMap<>();
+
+	private final ConcurrentMap<String, Template> templateCaches = new ConcurrentReferenceHashMap<>();
 
 	public MustacheRenderer(Compiler mustache) {
 		this.mustache = mustache;
@@ -78,4 +78,5 @@ public class MustacheRenderer {
 			throw new IllegalStateException("Cannot load template " + name, e);
 		}
 	}
+
 }

@@ -24,45 +24,44 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 public class IndexHtmlCreatorTest {
-    
-    @Mock
-    private FileProcessor fileProcessor;
-    @Captor
-    private ArgumentCaptor<Path> pathCaptor;
-    @Captor
-    private ArgumentCaptor<Map<String,Object>> mapCaptor;
-    
-    private FileCreator<ProjectCreation> creator;
-    
-    @Before
-    public void before() {
-        MockitoAnnotations.initMocks(this);
-        this.creator = new IndexHtmlCreator(fileProcessor);
-    }
-    
-    @Test
-    public void assertIndexHtmlIsCreated() {
-        ProjectCreation request = ProjectCreation.builder()
-                        .name("test-app")
-                        .rootDir(".")
-                        .build();
-        this.creator.create(request);
-        verify(this.fileProcessor, times(1)).touch(pathCaptor.capture());
-        Path indexHtmlPath = pathCaptor.getValue();
-        assertEquals(Paths.get("./src/index.html"), indexHtmlPath);
-    }
-    
-    @Test
-    public void assertTemplateIsParsed() {
-        ProjectCreation request = ProjectCreation.builder()
-                        .name("test-app")
-                        .rootDir(".")
-                        .build();
-        this.creator.create(request);
-        verify(this.fileProcessor, times(1)).processTemplate(eq(IndexHtmlCreator.INDEX_HTML_TPL_PATH),
-                                                                mapCaptor.capture());
-        
-        Map<String, Object> args = mapCaptor.getValue();
-        assertEquals("test-app", args.get("REPO_NAME"));
-    }
+
+	@Mock
+	private FileProcessor fileProcessor;
+
+	@Captor
+	private ArgumentCaptor<Path> pathCaptor;
+
+	@Captor
+	private ArgumentCaptor<Map<String, Object>> mapCaptor;
+
+	private FileCreator<ProjectCreation> creator;
+
+	@Before
+	public void before() {
+		MockitoAnnotations.initMocks(this);
+		this.creator = new IndexHtmlCreator(fileProcessor);
+	}
+
+	@Test
+	public void assertIndexHtmlIsCreated() {
+		ProjectCreation request = ProjectCreation.builder().name("test-app").rootDir(".")
+				.build();
+		this.creator.create(request);
+		verify(this.fileProcessor, times(1)).touch(pathCaptor.capture());
+		Path indexHtmlPath = pathCaptor.getValue();
+		assertEquals(Paths.get("./src/index.html"), indexHtmlPath);
+	}
+
+	@Test
+	public void assertTemplateIsParsed() {
+		ProjectCreation request = ProjectCreation.builder().name("test-app").rootDir(".")
+				.build();
+		this.creator.create(request);
+		verify(this.fileProcessor, times(1)).processTemplate(
+				eq(IndexHtmlCreator.INDEX_HTML_TPL_PATH), mapCaptor.capture());
+
+		Map<String, Object> args = mapCaptor.getValue();
+		assertEquals("test-app", args.get("REPO_NAME"));
+	}
+
 }

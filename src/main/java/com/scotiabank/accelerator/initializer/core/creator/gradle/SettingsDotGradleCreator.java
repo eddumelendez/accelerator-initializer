@@ -23,20 +23,20 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @JavaLibrary
 class SettingsDotGradleCreator implements FileCreator<ProjectCreation> {
 
-    private static final String PROJECT_NAME = "rootProject.name = '%s'";
-    private final FileProcessor fileProcessor;
+	private static final String PROJECT_NAME = "rootProject.name = '%s'";
 
-    public SettingsDotGradleCreator(FileProcessor fileProcessor) {
-        this.fileProcessor = checkNotNull(fileProcessor);
-    }
+	private final FileProcessor fileProcessor;
 
-    @Override
-    public void create(ProjectCreation request) {
-        Path settingGradlePath = Paths.get(request.getRootDir(),"settings.gradle");
-        File settingsDotGralde = this.fileProcessor.touch(settingGradlePath);
-        String projectNameProperty = String.format(PROJECT_NAME, request.getName());
-        this.fileProcessor.writeContentTo(settingsDotGralde, projectNameProperty);
-    }
-    
-    
+	public SettingsDotGradleCreator(FileProcessor fileProcessor) {
+		this.fileProcessor = checkNotNull(fileProcessor);
+	}
+
+	@Override
+	public void create(ProjectCreation request) {
+		Path settingGradlePath = Paths.get(request.getRootDir(), "settings.gradle");
+		File settingsDotGralde = this.fileProcessor.touch(settingGradlePath);
+		String projectNameProperty = String.format(PROJECT_NAME, request.getName());
+		this.fileProcessor.writeContentTo(settingsDotGralde, projectNameProperty);
+	}
+
 }

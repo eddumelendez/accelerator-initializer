@@ -25,25 +25,28 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Node
 class IndexJsCreator implements FileCreator<ProjectCreation> {
 
-    private static final String INDEX_JS_TPL_PATH = "templates/projectCreation/node/index.js.tpl";
-    private final FileProcessor fileProcessor;
+	private static final String INDEX_JS_TPL_PATH = "templates/projectCreation/node/index.js.tpl";
 
-    public IndexJsCreator(FileProcessor fileProcessor) {
-        this.fileProcessor = checkNotNull(fileProcessor);
-    }
+	private final FileProcessor fileProcessor;
 
-    @Override
-    public void create(ProjectCreation request) {
-        log.info("Creating index.js file");
-        InputStream inputStream = this.fileProcessor.loadResourceFromClassPath(INDEX_JS_TPL_PATH);
-        Path appPath = Paths.get(request.getRootDir(), SrcFolderCreator.SRC_PATH);
-        Path indexJsPath = Paths.get("index.js");
-        File indexJs = fileProcessor.touch(appPath.resolve(indexJsPath));
-        this.fileProcessor.copy(inputStream, indexJs);
-    }
-    
-    @Override
-    public int order() {
-        return FileCreationOrder.INDEX_JS.order();
-    }
+	public IndexJsCreator(FileProcessor fileProcessor) {
+		this.fileProcessor = checkNotNull(fileProcessor);
+	}
+
+	@Override
+	public void create(ProjectCreation request) {
+		log.info("Creating index.js file");
+		InputStream inputStream = this.fileProcessor
+				.loadResourceFromClassPath(INDEX_JS_TPL_PATH);
+		Path appPath = Paths.get(request.getRootDir(), SrcFolderCreator.SRC_PATH);
+		Path indexJsPath = Paths.get("index.js");
+		File indexJs = fileProcessor.touch(appPath.resolve(indexJsPath));
+		this.fileProcessor.copy(inputStream, indexJs);
+	}
+
+	@Override
+	public int order() {
+		return FileCreationOrder.INDEX_JS.order();
+	}
+
 }

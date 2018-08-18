@@ -29,38 +29,40 @@ import com.scotiabank.accelerator.initializer.core.creator.FileCreator;
 import com.scotiabank.accelerator.initializer.model.ApplicationType;
 
 public class ApplicationYamlCreatorTest {
-    
-    @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
-    @Mock
-    private FileProcessor fileProcessor;
-    @Captor
-    private ArgumentCaptor<Path> fileCaptor;
-    private FileCreator<ProjectCreation> srcFileCreator;
 
-    
-    @Before
-    public void before() {
-        MockitoAnnotations.initMocks(this);
-        this.srcFileCreator = new ApplicationYamlCreator(fileProcessor);
-    }
-    
-    @Test
-    public void assertItRunsAfterResourceFolder() {
-       assertTrue(this.srcFileCreator.order() > FileCreationOrder.JAVA_MAIN_FOLDER.order());
-    }
+	@Rule
+	public TemporaryFolder folder = new TemporaryFolder();
 
-    @Test
-    public void assertFileIsCreated() throws IOException {
-        ProjectCreation request = ProjectCreation.builder()
-                .rootDir(folder.getRoot().getAbsolutePath())
-                .type(ApplicationType.JAVA_SPRING_BOOT)
-                .build();
-        srcFileCreator.create(request);
-        verify(fileProcessor, times(1)).touch(this.fileCaptor.capture());
-        Path path = this.fileCaptor.getValue();
-        assertEquals(Paths.get(folder.getRoot().getAbsolutePath()+ApplicationYamlCreator.APPLICATION_YML_PATH), path);
-    }
-    
-    
+	@Mock
+	private FileProcessor fileProcessor;
+
+	@Captor
+	private ArgumentCaptor<Path> fileCaptor;
+
+	private FileCreator<ProjectCreation> srcFileCreator;
+
+	@Before
+	public void before() {
+		MockitoAnnotations.initMocks(this);
+		this.srcFileCreator = new ApplicationYamlCreator(fileProcessor);
+	}
+
+	@Test
+	public void assertItRunsAfterResourceFolder() {
+		assertTrue(
+				this.srcFileCreator.order() > FileCreationOrder.JAVA_MAIN_FOLDER.order());
+	}
+
+	@Test
+	public void assertFileIsCreated() throws IOException {
+		ProjectCreation request = ProjectCreation.builder()
+				.rootDir(folder.getRoot().getAbsolutePath())
+				.type(ApplicationType.JAVA_SPRING_BOOT).build();
+		srcFileCreator.create(request);
+		verify(fileProcessor, times(1)).touch(this.fileCaptor.capture());
+		Path path = this.fileCaptor.getValue();
+		assertEquals(Paths.get(folder.getRoot().getAbsolutePath()
+				+ ApplicationYamlCreator.APPLICATION_YML_PATH), path);
+	}
+
 }

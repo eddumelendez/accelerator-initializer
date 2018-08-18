@@ -5,10 +5,11 @@
 package com.scotiabank.accelerator.initializer.core.creator;
 
 public interface ProjectCreator<T> {
-    
-    void create(T request);
 
-    default boolean skip(T t) {
-        return false;
-    }
+	void create(T request);
+
+	default boolean skip(T t) {
+		return false;
+	}
+
 }

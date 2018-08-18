@@ -28,47 +28,50 @@ import com.scotiabank.accelerator.initializer.core.FileProcessor;
 import com.scotiabank.accelerator.initializer.core.creator.FileCreator;
 
 public class ManifestFileCreatorTest {
-    
-    @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
-    @Mock
-    private FileProcessor processor;
-    @Captor
-    private ArgumentCaptor<Path> pathArgument;
 
-    private FileCreator<ProjectCreation> creator;
-    private static final String FILE_NAME = "manifest.yml";
-    
-    
-    @Before
-    public void before() throws IOException {
-        MockitoAnnotations.initMocks(this);
-        this.creator = new ManifestFileCreator(processor);
-        folder.newFolder("environments");
-    }
-    
-    @Test
-    public void assertManifestFileAreCreated() throws IOException {
-        ProjectCreation request = ProjectCreation.builder()
-                        .rootDir(folder.getRoot().getAbsolutePath())
-                        .build();
-        creator.create(request);
-        verify(this.processor, times(1)).touch(pathArgument.capture());
-        assertEquals(FILE_NAME, pathArgument.getValue().getFileName().toString());
-    }
+	@Rule
+	public TemporaryFolder folder = new TemporaryFolder();
 
-    @Test
-    public void asssertTemplateProcessorIsCalledForEachSpaceAndRegion() throws IOException {
-        ProjectCreation request = ProjectCreation.builder()
-                .rootDir(folder.getRoot().getAbsolutePath())
-                .build();
-        creator.create(request);
-        verify(this.processor, times(1)).processTemplate(eq(ManifestFileCreator.MANIFEST_FILE_TEMPLATE), any());
-        verify(this.processor, times(1)).writeContentTo(any(), any());
-    }
-    
-    @Test
-    public void assertOrderIsCorrect() throws IOException {
-        assertEquals(FileCreationOrder.MANIFEST_FILES.order(), this.creator.order());
-    }
+	@Mock
+	private FileProcessor processor;
+
+	@Captor
+	private ArgumentCaptor<Path> pathArgument;
+
+	private FileCreator<ProjectCreation> creator;
+
+	private static final String FILE_NAME = "manifest.yml";
+
+	@Before
+	public void before() throws IOException {
+		MockitoAnnotations.initMocks(this);
+		this.creator = new ManifestFileCreator(processor);
+		folder.newFolder("environments");
+	}
+
+	@Test
+	public void assertManifestFileAreCreated() throws IOException {
+		ProjectCreation request = ProjectCreation.builder()
+				.rootDir(folder.getRoot().getAbsolutePath()).build();
+		creator.create(request);
+		verify(this.processor, times(1)).touch(pathArgument.capture());
+		assertEquals(FILE_NAME, pathArgument.getValue().getFileName().toString());
+	}
+
+	@Test
+	public void asssertTemplateProcessorIsCalledForEachSpaceAndRegion()
+			throws IOException {
+		ProjectCreation request = ProjectCreation.builder()
+				.rootDir(folder.getRoot().getAbsolutePath()).build();
+		creator.create(request);
+		verify(this.processor, times(1))
+				.processTemplate(eq(ManifestFileCreator.MANIFEST_FILE_TEMPLATE), any());
+		verify(this.processor, times(1)).writeContentTo(any(), any());
+	}
+
+	@Test
+	public void assertOrderIsCorrect() throws IOException {
+		assertEquals(FileCreationOrder.MANIFEST_FILES.order(), this.creator.order());
+	}
+
 }

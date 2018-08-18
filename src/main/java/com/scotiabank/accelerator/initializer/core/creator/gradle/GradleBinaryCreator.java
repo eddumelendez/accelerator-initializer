@@ -26,45 +26,57 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @JavaLibrary
 class GradleBinaryCreator implements FileCreator<ProjectCreation> {
 
-    @VisibleForTesting
-    static final String GRADLE_WRAPPER_PROPERTIES_TEMPLATE_PATH = "projectCreation/gradle/gradle-wrapper.properties.tpl";
-    @VisibleForTesting
-    static final String GRADLEW_PATH = "templates/projectCreation/gradle/gradlew";
-    @VisibleForTesting
-    static final String GRADLEW_BAT_PATH = "templates/projectCreation/gradle/gradlew.bat";
-    @VisibleForTesting
-    static final String GRADLE_WRAPPER_JAR_PATH = "templates/projectCreation/gradle/gradle-wrapper.jar";
+	@VisibleForTesting
+	static final String GRADLE_WRAPPER_PROPERTIES_TEMPLATE_PATH = "projectCreation/gradle/gradle-wrapper.properties.tpl";
 
-    private final FileProcessor fileProcessor;
+	@VisibleForTesting
+	static final String GRADLEW_PATH = "templates/projectCreation/gradle/gradlew";
 
-    public GradleBinaryCreator(FileProcessor fileProcessor) {
-        this.fileProcessor = checkNotNull(fileProcessor);
-    }
-    
-    @Override
-    public void create(ProjectCreation request) {
-        Path gradleFolder = Paths.get(request.getRootDir(), "gradle", "wrapper");
-        gradleFolder.toFile().mkdirs();
+	@VisibleForTesting
+	static final String GRADLEW_BAT_PATH = "templates/projectCreation/gradle/gradlew.bat";
 
-        String gradleWrapperContent = fileProcessor.processTemplate(GRADLE_WRAPPER_PROPERTIES_TEMPLATE_PATH, ImmutableMap.of("GRADLE_VERSION", resolveGradleVersion(request)));
-        this.fileProcessor.writeContentTo(gradleFolder.resolve("gradle-wrapper.properties").toFile(), gradleWrapperContent);
+	@VisibleForTesting
+	static final String GRADLE_WRAPPER_JAR_PATH = "templates/projectCreation/gradle/gradle-wrapper.jar";
 
-        File root = new File(request.getRootDir());
-        InputStream gradlew = this.fileProcessor.loadResourceFromClassPath(GRADLEW_PATH);
-        InputStream gradlewBat = this.fileProcessor.loadResourceFromClassPath(GRADLEW_BAT_PATH);
-        InputStream gradleWrapperJar = this.fileProcessor.loadResourceFromClassPath(GRADLE_WRAPPER_JAR_PATH);
+	private final FileProcessor fileProcessor;
 
-        this.fileProcessor.copy(gradlew, root.toPath().resolve("gradlew").toFile());
-        this.fileProcessor.copy(gradlewBat, root.toPath().resolve("gradlew.bat").toFile());
-        this.fileProcessor.copy(gradleWrapperJar, root.toPath().resolve("gradle").resolve("wrapper").resolve("gradle-wrapper.jar").toFile());
-    }
+	public GradleBinaryCreator(FileProcessor fileProcessor) {
+		this.fileProcessor = checkNotNull(fileProcessor);
+	}
 
-    private String resolveGradleVersion(ProjectCreation request) {
-        switch(request.getType()) {
-            case JAVA_SPRING_BOOT_2:
-                return "4.5.1";
-            default:
-                return "3.5.1";
-        }
-    }
+	@Override
+	public void create(ProjectCreation request) {
+		Path gradleFolder = Paths.get(request.getRootDir(), "gradle", "wrapper");
+		gradleFolder.toFile().mkdirs();
+
+		String gradleWrapperContent = fileProcessor.processTemplate(
+				GRADLE_WRAPPER_PROPERTIES_TEMPLATE_PATH,
+				ImmutableMap.of("GRADLE_VERSION", resolveGradleVersion(request)));
+		this.fileProcessor.writeContentTo(
+				gradleFolder.resolve("gradle-wrapper.properties").toFile(),
+				gradleWrapperContent);
+
+		File root = new File(request.getRootDir());
+		InputStream gradlew = this.fileProcessor.loadResourceFromClassPath(GRADLEW_PATH);
+		InputStream gradlewBat = this.fileProcessor
+				.loadResourceFromClassPath(GRADLEW_BAT_PATH);
+		InputStream gradleWrapperJar = this.fileProcessor
+				.loadResourceFromClassPath(GRADLE_WRAPPER_JAR_PATH);
+
+		this.fileProcessor.copy(gradlew, root.toPath().resolve("gradlew").toFile());
+		this.fileProcessor.copy(gradlewBat,
+				root.toPath().resolve("gradlew.bat").toFile());
+		this.fileProcessor.copy(gradleWrapperJar, root.toPath().resolve("gradle")
+				.resolve("wrapper").resolve("gradle-wrapper.jar").toFile());
+	}
+
+	private String resolveGradleVersion(ProjectCreation request) {
+		switch (request.getType()) {
+		case JAVA_SPRING_BOOT_2:
+			return "4.5.1";
+		default:
+			return "3.5.1";
+		}
+	}
+
 }

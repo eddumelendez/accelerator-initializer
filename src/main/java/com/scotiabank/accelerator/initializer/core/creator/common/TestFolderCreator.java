@@ -19,14 +19,12 @@ import java.nio.file.Paths;
 @Node
 public class TestFolderCreator implements FileCreator<ProjectCreation> {
 
-    public static final String TEST_PATH = "test";
+	public static final String TEST_PATH = "test";
 
-    @Override
-    public void create(ProjectCreation request) {
-        log.info("Creating test folder for project type {}", request.getType());
-        Paths.get(request.getRootDir(), TEST_PATH)
-             .toFile()
-             .mkdir();
-    }
-    
+	@Override
+	public void create(ProjectCreation request) {
+		log.info("Creating test folder for project type {}", request.getType());
+		Paths.get(request.getRootDir(), TEST_PATH).toFile().mkdir();
+	}
+
 }

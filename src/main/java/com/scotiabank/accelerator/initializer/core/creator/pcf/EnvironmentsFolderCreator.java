@@ -23,11 +23,10 @@ import lombok.extern.slf4j.Slf4j;
 @React
 class EnvironmentsFolderCreator implements FileCreator<ProjectCreation> {
 
-    @Override
-    public void create(ProjectCreation request) {
-        log.info("Creating environments folder for project type {}", request.getType());
-        Paths.get(request.getRootDir(), "environments")
-             .toFile()
-             .mkdir();
-    }
+	@Override
+	public void create(ProjectCreation request) {
+		log.info("Creating environments folder for project type {}", request.getType());
+		Paths.get(request.getRootDir(), "environments").toFile().mkdir();
+	}
+
 }

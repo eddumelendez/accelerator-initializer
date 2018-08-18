@@ -13,8 +13,13 @@ import lombok.Getter;
 @Getter
 @Builder
 public class ValidationError {
-    private String objectName;
-    private String field;
-    private Object rejectedValue;
-    private String message;
+
+	private String objectName;
+
+	private String field;
+
+	private Object rejectedValue;
+
+	private String message;
+
 }

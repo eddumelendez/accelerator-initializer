@@ -29,35 +29,41 @@ import lombok.extern.slf4j.Slf4j;
 @JavaLibrary
 @SpringBoot
 class ApplicationClassCreator implements FileCreator<ProjectCreation> {
-    @VisibleForTesting
-    static final String APPLICATION_TPL_PATH = "projectCreation/Application.tpl";
-    private final FileProcessor fileProcessor;
 
-    public ApplicationClassCreator(FileProcessor fileProcessor) {
-        this.fileProcessor = checkNotNull(fileProcessor);
-    }
+	@VisibleForTesting
+	static final String APPLICATION_TPL_PATH = "projectCreation/Application.tpl";
 
-    @Override
-    public void create(ProjectCreation request) {
-        log.info("Creating Application.java file");
-        Path srcPath = Paths.get(request.getRootDir(), SRC_MAIN_JAVA_PATH);
-        Path packagePath = Paths.get("com", request.getGroup().toLowerCase(), "Application.java");
-        File applicationJavaClass = fileProcessor.touch(srcPath.resolve(packagePath));
-        writeContentTo(applicationJavaClass, request);
-    }
-    
-    private void writeContentTo(File applicationJavaClass, ProjectCreation request) {
-        String packageValue = request.resolvePackageName();
-        String content = fileProcessor.processTemplate(APPLICATION_TPL_PATH, ImmutableMap.of("PACKAGE", packageValue, "IS_SPRING_BOOT_APP", isSpringBootApp(request)));
-        fileProcessor.writeContentTo(applicationJavaClass, content);
-    }
+	private final FileProcessor fileProcessor;
 
-    private boolean isSpringBootApp(ProjectCreation request) {
-        return request.isSpringBootApp();
-    }
+	public ApplicationClassCreator(FileProcessor fileProcessor) {
+		this.fileProcessor = checkNotNull(fileProcessor);
+	}
 
-    @Override
-    public int order() {
-        return FileCreationOrder.APPLICATION_CLASS.order();
-    }
+	@Override
+	public void create(ProjectCreation request) {
+		log.info("Creating Application.java file");
+		Path srcPath = Paths.get(request.getRootDir(), SRC_MAIN_JAVA_PATH);
+		Path packagePath = Paths.get("com", request.getGroup().toLowerCase(),
+				"Application.java");
+		File applicationJavaClass = fileProcessor.touch(srcPath.resolve(packagePath));
+		writeContentTo(applicationJavaClass, request);
+	}
+
+	private void writeContentTo(File applicationJavaClass, ProjectCreation request) {
+		String packageValue = request.resolvePackageName();
+		String content = fileProcessor.processTemplate(APPLICATION_TPL_PATH,
+				ImmutableMap.of("PACKAGE", packageValue, "IS_SPRING_BOOT_APP",
+						isSpringBootApp(request)));
+		fileProcessor.writeContentTo(applicationJavaClass, content);
+	}
+
+	private boolean isSpringBootApp(ProjectCreation request) {
+		return request.isSpringBootApp();
+	}
+
+	@Override
+	public int order() {
+		return FileCreationOrder.APPLICATION_CLASS.order();
+	}
+
 }

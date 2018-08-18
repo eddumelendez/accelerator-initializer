@@ -23,14 +23,12 @@ import java.nio.file.Paths;
 @JavaLibrary
 public class SrcFolderCreator implements FileCreator<ProjectCreation> {
 
-    public static final String SRC_PATH = "src";
+	public static final String SRC_PATH = "src";
 
-    @Override
-    public void create(ProjectCreation request) {
-        log.info("Creating app folder for project type {}", request.getType());
-        Paths.get(request.getRootDir(), SRC_PATH)
-             .toFile()
-             .mkdir();
-    }
-    
+	@Override
+	public void create(ProjectCreation request) {
+		log.info("Creating app folder for project type {}", request.getType());
+		Paths.get(request.getRootDir(), SRC_PATH).toFile().mkdir();
+	}
+
 }

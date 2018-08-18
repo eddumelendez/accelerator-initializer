@@ -22,19 +22,24 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Slf4j
 @React
 class TestHelperJsCreator implements FileCreator<ProjectCreation> {
-    @VisibleForTesting
-    static final String TEST_HELPER_JS_TEMPLATE_PATH = "templates/projectCreation/react/test_helper.js.tpl";
-    private final FileProcessor fileProcessor;
 
-    public TestHelperJsCreator(FileProcessor fileProcessor) {
-        this.fileProcessor = checkNotNull(fileProcessor);
-    }
-    
-    @Override
-    public void create(ProjectCreation request) {
-        log.info("Creating test_helper.js file");
-        InputStream inputStream = this.fileProcessor.loadResourceFromClassPath(TEST_HELPER_JS_TEMPLATE_PATH);
-        File file = this.fileProcessor.touch(Paths.get(request.getRootDir(), "test_helper.js"));
-        this.fileProcessor.copy(inputStream, file);
-    }
+	@VisibleForTesting
+	static final String TEST_HELPER_JS_TEMPLATE_PATH = "templates/projectCreation/react/test_helper.js.tpl";
+
+	private final FileProcessor fileProcessor;
+
+	public TestHelperJsCreator(FileProcessor fileProcessor) {
+		this.fileProcessor = checkNotNull(fileProcessor);
+	}
+
+	@Override
+	public void create(ProjectCreation request) {
+		log.info("Creating test_helper.js file");
+		InputStream inputStream = this.fileProcessor
+				.loadResourceFromClassPath(TEST_HELPER_JS_TEMPLATE_PATH);
+		File file = this.fileProcessor
+				.touch(Paths.get(request.getRootDir(), "test_helper.js"));
+		this.fileProcessor.copy(inputStream, file);
+	}
+
 }

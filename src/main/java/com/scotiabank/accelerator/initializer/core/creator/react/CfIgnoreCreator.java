@@ -22,20 +22,24 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Slf4j
 @React
 class CfIgnoreCreator implements FileCreator<ProjectCreation> {
-    @VisibleForTesting
-    static final String CF_IGNORE_TEMPLATE_PATH = "templates/projectCreation/react/cfignore.tpl";
-    private final FileProcessor fileProcessor;
 
-    public CfIgnoreCreator(FileProcessor fileProcessor) {
-        this.fileProcessor = checkNotNull(fileProcessor);
-    }
-    
-    @Override
-    public void create(ProjectCreation request) {
-        log.info("Creating .cfignore file");
-        InputStream inputStream = this.fileProcessor.loadResourceFromClassPath(CF_IGNORE_TEMPLATE_PATH);
-        File file = this.fileProcessor.touch(Paths.get(request.getRootDir(), ".cfignore"));
-        this.fileProcessor.copy(inputStream, file);
-    }
+	@VisibleForTesting
+	static final String CF_IGNORE_TEMPLATE_PATH = "templates/projectCreation/react/cfignore.tpl";
+
+	private final FileProcessor fileProcessor;
+
+	public CfIgnoreCreator(FileProcessor fileProcessor) {
+		this.fileProcessor = checkNotNull(fileProcessor);
+	}
+
+	@Override
+	public void create(ProjectCreation request) {
+		log.info("Creating .cfignore file");
+		InputStream inputStream = this.fileProcessor
+				.loadResourceFromClassPath(CF_IGNORE_TEMPLATE_PATH);
+		File file = this.fileProcessor
+				.touch(Paths.get(request.getRootDir(), ".cfignore"));
+		this.fileProcessor.copy(inputStream, file);
+	}
 
 }

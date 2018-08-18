@@ -25,25 +25,28 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Node
 class IndexSpecJsCreator implements FileCreator<ProjectCreation> {
 
-    private static final String INDEX_SPEC_JS_TPL_PATH = "templates/projectCreation/node/index_spec.js.tpl";
-    private final FileProcessor fileProcessor;
+	private static final String INDEX_SPEC_JS_TPL_PATH = "templates/projectCreation/node/index_spec.js.tpl";
 
-    public IndexSpecJsCreator(FileProcessor fileProcessor) {
-        this.fileProcessor = checkNotNull(fileProcessor);
-    }
+	private final FileProcessor fileProcessor;
 
-    @Override
-    public void create(ProjectCreation request) {
-        log.info("Creating index_spec.js file");
-        InputStream inputStream = this.fileProcessor.loadResourceFromClassPath(INDEX_SPEC_JS_TPL_PATH);
-        Path testPath = Paths.get(request.getRootDir(), TestFolderCreator.TEST_PATH);
-        Path indexSpecJsPath = Paths.get("index_spec.js");
-        File indexSpecJs = fileProcessor.touch(testPath.resolve(indexSpecJsPath));
-        this.fileProcessor.copy(inputStream, indexSpecJs);
-    }
-    
-    @Override
-    public int order() {
-        return FileCreationOrder.INDEX_SPEC_JS.order();
-    }
+	public IndexSpecJsCreator(FileProcessor fileProcessor) {
+		this.fileProcessor = checkNotNull(fileProcessor);
+	}
+
+	@Override
+	public void create(ProjectCreation request) {
+		log.info("Creating index_spec.js file");
+		InputStream inputStream = this.fileProcessor
+				.loadResourceFromClassPath(INDEX_SPEC_JS_TPL_PATH);
+		Path testPath = Paths.get(request.getRootDir(), TestFolderCreator.TEST_PATH);
+		Path indexSpecJsPath = Paths.get("index_spec.js");
+		File indexSpecJs = fileProcessor.touch(testPath.resolve(indexSpecJsPath));
+		this.fileProcessor.copy(inputStream, indexSpecJs);
+	}
+
+	@Override
+	public int order() {
+		return FileCreationOrder.INDEX_SPEC_JS.order();
+	}
+
 }

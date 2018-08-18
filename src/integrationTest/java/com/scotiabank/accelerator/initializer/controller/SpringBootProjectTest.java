@@ -22,25 +22,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 public class SpringBootProjectTest {
-    @Autowired
-    private MockMvc mvc;
 
-    @Rule
-    public Stopwatch stopwatch = new Stopwatch() {};
+	@Autowired
+	private MockMvc mvc;
 
-    @Rule
-    public TemporaryFolder tempFolder = new TemporaryFolder();
+	@Rule
+	public Stopwatch stopwatch = new Stopwatch() {
+	};
 
-    @Test
-    @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert") // uses MockMVC assertions
-    public void whenDownloadBodyIsOkThenExpect201() throws Exception {
-        this.mvc.perform(post("/api/project/generate")
-            .contentType(MediaType.APPLICATION_JSON_UTF8)
-            .content("{\"group\" : \"HOPPER\", \"type\" : \"JAVA_SPRING_BOOT\", \"name\": \"hopper-intake\"}")
-        )
-            .andExpect(executionTimeLessThan(stopwatch, 1500))
-            .andDo(print())
-            .andExpect(status().is2xxSuccessful())
-            .andExpect(isValidZip(tempFolder));
-    }
+	@Rule
+	public TemporaryFolder tempFolder = new TemporaryFolder();
+
+	@Test
+	@SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert") // uses MockMVC assertions
+	public void whenDownloadBodyIsOkThenExpect201() throws Exception {
+		this.mvc.perform(post("/api/project/generate")
+				.contentType(MediaType.APPLICATION_JSON_UTF8).content(
+						"{\"group\" : \"HOPPER\", \"type\" : \"JAVA_SPRING_BOOT\", \"name\": \"hopper-intake\"}"))
+				.andExpect(executionTimeLessThan(stopwatch, 1500)).andDo(print())
+				.andExpect(status().is2xxSuccessful()).andExpect(isValidZip(tempFolder));
+	}
+
 }

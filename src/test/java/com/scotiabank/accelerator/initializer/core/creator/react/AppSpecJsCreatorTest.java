@@ -34,46 +34,47 @@ import static org.mockito.Mockito.when;
 
 public class AppSpecJsCreatorTest {
 
-    @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
+	@Rule
+	public TemporaryFolder folder = new TemporaryFolder();
 
-    @Mock
-    private FileProcessor fileProcessor;
-    @Captor
-    private ArgumentCaptor<Path> pathCaptor;
+	@Mock
+	private FileProcessor fileProcessor;
 
-    private FileCreator<ProjectCreation> creator;
-    
-    @Before
-    public void before() {
-        MockitoAnnotations.initMocks(this);
-        this.creator = new AppSpecJsCreator(fileProcessor);
-    }
-    
-    @Test
-    public void assertOrder() {
-        assertTrue(creator.order() == FileCreationOrder.APP_SPEC_JS.order());
-        assertTrue(creator.order() > FileCreationOrder.INTEGRATIONTEST_FOLDER.order());
-    }
+	@Captor
+	private ArgumentCaptor<Path> pathCaptor;
 
-    @Test
-    public void assertAppSpecJsIsCreated() {
-        ProjectCreation request = ProjectCreation.builder()
-                        .rootDir(".")
-                        .build();
-        this.creator.create(request);
-        verify(this.fileProcessor, times(1)).touch(pathCaptor.capture());
-        Path healthCheckJsPath = pathCaptor.getValue();
-        assertEquals(Paths.get("./acceptanceTest/App_spec.js"), healthCheckJsPath);
-    }
+	private FileCreator<ProjectCreation> creator;
 
-    @Test
-    public void assertItCopiesContentToFile() throws IOException {
-        File f = folder.newFile("App_spec.js");
-        when(this.fileProcessor.loadResourceFromClassPath(anyString())).thenReturn(new FileInputStream(f));
-        when(this.fileProcessor.touch(any())).thenReturn(f);
-        ProjectCreation request = ProjectCreation.builder().rootDir(".").build();
-        creator.create(request);
-        verify(this.fileProcessor, times(1)).copy(any(), eq(f));
-    }
+	@Before
+	public void before() {
+		MockitoAnnotations.initMocks(this);
+		this.creator = new AppSpecJsCreator(fileProcessor);
+	}
+
+	@Test
+	public void assertOrder() {
+		assertTrue(creator.order() == FileCreationOrder.APP_SPEC_JS.order());
+		assertTrue(creator.order() > FileCreationOrder.INTEGRATIONTEST_FOLDER.order());
+	}
+
+	@Test
+	public void assertAppSpecJsIsCreated() {
+		ProjectCreation request = ProjectCreation.builder().rootDir(".").build();
+		this.creator.create(request);
+		verify(this.fileProcessor, times(1)).touch(pathCaptor.capture());
+		Path healthCheckJsPath = pathCaptor.getValue();
+		assertEquals(Paths.get("./acceptanceTest/App_spec.js"), healthCheckJsPath);
+	}
+
+	@Test
+	public void assertItCopiesContentToFile() throws IOException {
+		File f = folder.newFile("App_spec.js");
+		when(this.fileProcessor.loadResourceFromClassPath(anyString()))
+				.thenReturn(new FileInputStream(f));
+		when(this.fileProcessor.touch(any())).thenReturn(f);
+		ProjectCreation request = ProjectCreation.builder().rootDir(".").build();
+		creator.create(request);
+		verify(this.fileProcessor, times(1)).copy(any(), eq(f));
+	}
+
 }

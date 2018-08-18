@@ -26,36 +26,42 @@ import com.scotiabank.accelerator.initializer.model.ApplicationType;
 import com.google.common.collect.Lists;
 
 public class ProjectCreationServiceTest {
-    
-    @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
-    @Mock
-    private ApplicationEventPublisher publisher;
-    @Mock
-    private FileProcessor fileProcessor;
-    @Mock
-    private ZipFile zipFile;
-    @Mock
-    private ProjectCreator<ProjectCreation> projectCreator1;
-    @Mock
-    private ProjectCreator<ProjectCreation> projectCreator2;
-    
-    private ProjectCreationService creator;
-    
-    @Before
-    public void before() {
-        MockitoAnnotations.initMocks(this);
-        this.creator = new ProjectCreationServiceImpl(Lists.newArrayList(projectCreator2, projectCreator1), publisher,fileProcessor,zipFile);
-    }
 
-    @Test
-    public void assertPublishEvent() {
-        ProjectCreation creation = ProjectCreation.builder()
-            .group("hopper")
-            .name("initializer")
-            .type(ApplicationType.NODE).build();
+	@Rule
+	public TemporaryFolder folder = new TemporaryFolder();
 
-        this.creator.create(creation);
-        verify(this.publisher, times(1)).publishEvent(any(InitializerCleanUpEvent.class));
-    }
+	@Mock
+	private ApplicationEventPublisher publisher;
+
+	@Mock
+	private FileProcessor fileProcessor;
+
+	@Mock
+	private ZipFile zipFile;
+
+	@Mock
+	private ProjectCreator<ProjectCreation> projectCreator1;
+
+	@Mock
+	private ProjectCreator<ProjectCreation> projectCreator2;
+
+	private ProjectCreationService creator;
+
+	@Before
+	public void before() {
+		MockitoAnnotations.initMocks(this);
+		this.creator = new ProjectCreationServiceImpl(
+				Lists.newArrayList(projectCreator2, projectCreator1), publisher,
+				fileProcessor, zipFile);
+	}
+
+	@Test
+	public void assertPublishEvent() {
+		ProjectCreation creation = ProjectCreation.builder().group("hopper")
+				.name("initializer").type(ApplicationType.NODE).build();
+
+		this.creator.create(creation);
+		verify(this.publisher, times(1)).publishEvent(any(InitializerCleanUpEvent.class));
+	}
+
 }

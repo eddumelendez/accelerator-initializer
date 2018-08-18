@@ -13,11 +13,11 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class RFC1123DateTimeSerializer extends JsonSerializer<ZonedDateTime> {
-    @Override
-    public void serialize(ZonedDateTime dateTime,
-                          JsonGenerator jsonGenerator,
-                          SerializerProvider serializerProvider)
-            throws IOException {
-        jsonGenerator.writeObject(dateTime.format(DateTimeFormatter.RFC_1123_DATE_TIME));
-    }
+
+	@Override
+	public void serialize(ZonedDateTime dateTime, JsonGenerator jsonGenerator,
+			SerializerProvider serializerProvider) throws IOException {
+		jsonGenerator.writeObject(dateTime.format(DateTimeFormatter.RFC_1123_DATE_TIME));
+	}
+
 }

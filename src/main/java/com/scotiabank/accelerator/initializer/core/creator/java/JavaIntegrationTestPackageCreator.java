@@ -19,25 +19,30 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Component
 @SpringBoot
 class JavaIntegrationTestPackageCreator implements FileCreator<ProjectCreation> {
-    public static final String PACKAGE_PATH = "com/%s";
-    public static final String SRC_INTEGRATION_TEST_JAVA_PATH = "src/acceptanceTest/java";
-    private final FileProcessor fileProcessor;
-    
-    public JavaIntegrationTestPackageCreator(FileProcessor fileProcessor) {
-        this.fileProcessor = checkNotNull(fileProcessor);
-    }
-    
-    @Override
-    public void create(ProjectCreation request) {
-        String packagePath = String.format(PACKAGE_PATH, request.getGroup());
-        Path integTest = Paths.get(request.getRootDir(),  SRC_INTEGRATION_TEST_JAVA_PATH, packagePath);
-        fileProcessor.createDirectories(integTest.toFile());
-        new PackageInfo(fileProcessor)
-            .create(integTest.resolve("package-info.java"), request.resolvePackageName());
-    }
-    
-    @Override
-    public int order() {
-        return FileCreationOrder.JAVA_INTEGRATION_PACKAGE.order();
-    }
+
+	public static final String PACKAGE_PATH = "com/%s";
+
+	public static final String SRC_INTEGRATION_TEST_JAVA_PATH = "src/acceptanceTest/java";
+
+	private final FileProcessor fileProcessor;
+
+	public JavaIntegrationTestPackageCreator(FileProcessor fileProcessor) {
+		this.fileProcessor = checkNotNull(fileProcessor);
+	}
+
+	@Override
+	public void create(ProjectCreation request) {
+		String packagePath = String.format(PACKAGE_PATH, request.getGroup());
+		Path integTest = Paths.get(request.getRootDir(), SRC_INTEGRATION_TEST_JAVA_PATH,
+				packagePath);
+		fileProcessor.createDirectories(integTest.toFile());
+		new PackageInfo(fileProcessor).create(integTest.resolve("package-info.java"),
+				request.resolvePackageName());
+	}
+
+	@Override
+	public int order() {
+		return FileCreationOrder.JAVA_INTEGRATION_PACKAGE.order();
+	}
+
 }

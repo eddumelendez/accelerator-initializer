@@ -28,52 +28,52 @@ import com.scotiabank.accelerator.initializer.core.FileProcessor;
 import com.scotiabank.accelerator.initializer.model.ApplicationType;
 
 public class ApplicationClassCreatorTest {
-    
-    @Mock
-    private FileProcessor fileProcessor;
-    @Captor
-    private ArgumentCaptor<Path> pathCaptor;
-    @Captor
-    private ArgumentCaptor<Map<String,Object>> mapCaptor;
-    
-    private FileCreator<ProjectCreation> creator;
-    
-    @Before
-    public void before() {
-        MockitoAnnotations.initMocks(this);
-        this.creator = new SpringBootApplicationTestClassCreator(fileProcessor);
-    }
-    
-    @Test
-    public void assertCreatorRunsAfterJavaPackageCreator() {
-        assertTrue(creator.order() == FileCreationOrder.APPLICATION_CLASS.order());
-        assertTrue(creator.order() > FileCreationOrder.JAVA_PACKAGES.order());
-    }
 
-    @Test
-    public void assertTestClassIsCreated() {
-        ProjectCreation request = ProjectCreation.builder()
-                        .group("hopper")
-                        .type(ApplicationType.JAVA_SPRING_BOOT)
-                        .rootDir(".")
-                        .build();
-        this.creator.create(request);
-        verify(this.fileProcessor, times(1)).touch(pathCaptor.capture());
-        Path applicationPath = pathCaptor.getValue();
-        assertEquals(Paths.get("./src/test/java/com/hopper/ApplicationTest.java"), applicationPath);
-    }
-    
-    @Test
-    public void assertTemplateIsParsed() {
-        ProjectCreation request = ProjectCreation.builder()
-                        .group("hopper")
-                        .rootDir(".")
-                        .build();
-        this.creator.create(request);
-        verify(this.fileProcessor, times(1)).processTemplate(eq(SpringBootApplicationTestClassCreator.APPLICATION_TEST_TPL_PATH),
-                                                                mapCaptor.capture());
-        
-        Map<String, Object> args = mapCaptor.getValue();
-        assertEquals("com.hopper", args.get("PACKAGE"));
-    }
+	@Mock
+	private FileProcessor fileProcessor;
+
+	@Captor
+	private ArgumentCaptor<Path> pathCaptor;
+
+	@Captor
+	private ArgumentCaptor<Map<String, Object>> mapCaptor;
+
+	private FileCreator<ProjectCreation> creator;
+
+	@Before
+	public void before() {
+		MockitoAnnotations.initMocks(this);
+		this.creator = new SpringBootApplicationTestClassCreator(fileProcessor);
+	}
+
+	@Test
+	public void assertCreatorRunsAfterJavaPackageCreator() {
+		assertTrue(creator.order() == FileCreationOrder.APPLICATION_CLASS.order());
+		assertTrue(creator.order() > FileCreationOrder.JAVA_PACKAGES.order());
+	}
+
+	@Test
+	public void assertTestClassIsCreated() {
+		ProjectCreation request = ProjectCreation.builder().group("hopper")
+				.type(ApplicationType.JAVA_SPRING_BOOT).rootDir(".").build();
+		this.creator.create(request);
+		verify(this.fileProcessor, times(1)).touch(pathCaptor.capture());
+		Path applicationPath = pathCaptor.getValue();
+		assertEquals(Paths.get("./src/test/java/com/hopper/ApplicationTest.java"),
+				applicationPath);
+	}
+
+	@Test
+	public void assertTemplateIsParsed() {
+		ProjectCreation request = ProjectCreation.builder().group("hopper").rootDir(".")
+				.build();
+		this.creator.create(request);
+		verify(this.fileProcessor, times(1)).processTemplate(
+				eq(SpringBootApplicationTestClassCreator.APPLICATION_TEST_TPL_PATH),
+				mapCaptor.capture());
+
+		Map<String, Object> args = mapCaptor.getValue();
+		assertEquals("com.hopper", args.get("PACKAGE"));
+	}
+
 }

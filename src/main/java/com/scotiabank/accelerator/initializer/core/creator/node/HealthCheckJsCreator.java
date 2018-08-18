@@ -25,26 +25,30 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Node
 class HealthCheckJsCreator implements FileCreator<ProjectCreation> {
 
-    private static final String HEALTHCHECK_JS_TPL_PATH = "templates/projectCreation/node/healthCheck.js.tpl";
-    private final FileProcessor fileProcessor;
+	private static final String HEALTHCHECK_JS_TPL_PATH = "templates/projectCreation/node/healthCheck.js.tpl";
 
-    public HealthCheckJsCreator(FileProcessor fileProcessor) {
-        this.fileProcessor = checkNotNull(fileProcessor);
-    }
+	private final FileProcessor fileProcessor;
 
-    @Override
-    public void create(ProjectCreation request) {
-        log.info("Creating healthCheck.js file");
-        InputStream inputStream = this.fileProcessor.loadResourceFromClassPath(HEALTHCHECK_JS_TPL_PATH);
-        Path integrationTestPath = Paths.get(request.getRootDir(), IntegrationTestFolderCreator.INTEGRATION_TEST_PATH);
-        Path healthCheckJsPath = Paths.get("healthCheck.js");
-        File healthCheckJs = fileProcessor.touch(integrationTestPath.resolve(healthCheckJsPath));
-        this.fileProcessor.copy(inputStream, healthCheckJs);
-    }
-    
-    @Override
-    public int order() {
-        return FileCreationOrder.HEALTHCHECK_JS.order();
-    }
-    
+	public HealthCheckJsCreator(FileProcessor fileProcessor) {
+		this.fileProcessor = checkNotNull(fileProcessor);
+	}
+
+	@Override
+	public void create(ProjectCreation request) {
+		log.info("Creating healthCheck.js file");
+		InputStream inputStream = this.fileProcessor
+				.loadResourceFromClassPath(HEALTHCHECK_JS_TPL_PATH);
+		Path integrationTestPath = Paths.get(request.getRootDir(),
+				IntegrationTestFolderCreator.INTEGRATION_TEST_PATH);
+		Path healthCheckJsPath = Paths.get("healthCheck.js");
+		File healthCheckJs = fileProcessor
+				.touch(integrationTestPath.resolve(healthCheckJsPath));
+		this.fileProcessor.copy(inputStream, healthCheckJs);
+	}
+
+	@Override
+	public int order() {
+		return FileCreationOrder.HEALTHCHECK_JS.order();
+	}
+
 }

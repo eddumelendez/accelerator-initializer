@@ -22,28 +22,29 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 public class RequestValidationTest {
-    @Autowired
-    private MockMvc mvc;
 
-    @Test
-    @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert") // uses MockMVC assertions
-    public void whenProjectNameIsInvalidExpect400() throws Exception {
-        this.mvc.perform(post("/api/project/generate")
-            .contentType(MediaType.APPLICATION_JSON_UTF8)
-            .content("{\"group\" : \"\", \"type\" : \"JAVA_SPRING_BOOT\", \"name\": \"$INVALID_ONE\"}")
-        )
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.errors[*].field").value(hasItems("name", "group")))
-            .andExpect(jsonPath("$.errors[*].message").value(hasItems("Name must start with a lower-case letter or number and may contain hyphens, underscores and periods")));
-    }
+	@Autowired
+	private MockMvc mvc;
 
-    @Test
-    @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert") // uses MockMVC assertions
-    public void whenProjectTypeUnrecognizedExpect400() throws Exception {
-        this.mvc.perform(post("/api/project/generate")
-            .contentType(MediaType.APPLICATION_JSON_UTF8)
-            .content("{\"group\" : \"\", \"type\" : \"Unknown_type\", \"name\": \"VALID_ONE\"}")
-        )
-            .andExpect(status().isBadRequest());
-    }
+	@Test
+	@SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert") // uses MockMVC assertions
+	public void whenProjectNameIsInvalidExpect400() throws Exception {
+		this.mvc.perform(post("/api/project/generate")
+				.contentType(MediaType.APPLICATION_JSON_UTF8).content(
+						"{\"group\" : \"\", \"type\" : \"JAVA_SPRING_BOOT\", \"name\": \"$INVALID_ONE\"}"))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.errors[*].field").value(hasItems("name", "group")))
+				.andExpect(jsonPath("$.errors[*].message").value(hasItems(
+						"Name must start with a lower-case letter or number and may contain hyphens, underscores and periods")));
+	}
+
+	@Test
+	@SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert") // uses MockMVC assertions
+	public void whenProjectTypeUnrecognizedExpect400() throws Exception {
+		this.mvc.perform(post("/api/project/generate")
+				.contentType(MediaType.APPLICATION_JSON_UTF8).content(
+						"{\"group\" : \"\", \"type\" : \"Unknown_type\", \"name\": \"VALID_ONE\"}"))
+				.andExpect(status().isBadRequest());
+	}
+
 }

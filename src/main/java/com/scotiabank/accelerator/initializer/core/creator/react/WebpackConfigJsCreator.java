@@ -22,19 +22,24 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Slf4j
 @React
 class WebpackConfigJsCreator implements FileCreator<ProjectCreation> {
-    @VisibleForTesting
-    static final String WEBPACK_CONFIG_JS_TEMPLATE_PATH = "templates/projectCreation/react/webpack.config.js.tpl";
-    private final FileProcessor fileProcessor;
 
-    public WebpackConfigJsCreator(FileProcessor fileProcessor) {
-        this.fileProcessor = checkNotNull(fileProcessor);
-    }
-    
-    @Override
-    public void create(ProjectCreation request) {
-        log.info("Creating webpack.config.js file");
-        InputStream inputStream = this.fileProcessor.loadResourceFromClassPath(WEBPACK_CONFIG_JS_TEMPLATE_PATH);
-        File file = this.fileProcessor.touch(Paths.get(request.getRootDir(), "webpack.config.js"));
-        this.fileProcessor.copy(inputStream, file);
-    }
+	@VisibleForTesting
+	static final String WEBPACK_CONFIG_JS_TEMPLATE_PATH = "templates/projectCreation/react/webpack.config.js.tpl";
+
+	private final FileProcessor fileProcessor;
+
+	public WebpackConfigJsCreator(FileProcessor fileProcessor) {
+		this.fileProcessor = checkNotNull(fileProcessor);
+	}
+
+	@Override
+	public void create(ProjectCreation request) {
+		log.info("Creating webpack.config.js file");
+		InputStream inputStream = this.fileProcessor
+				.loadResourceFromClassPath(WEBPACK_CONFIG_JS_TEMPLATE_PATH);
+		File file = this.fileProcessor
+				.touch(Paths.get(request.getRootDir(), "webpack.config.js"));
+		this.fileProcessor.copy(inputStream, file);
+	}
+
 }

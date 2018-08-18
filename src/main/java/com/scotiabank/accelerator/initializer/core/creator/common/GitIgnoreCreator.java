@@ -29,26 +29,34 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Node
 @JavaLibrary
 public class GitIgnoreCreator implements FileCreator<ProjectCreation> {
-    @VisibleForTesting
-    static final String GIT_IGNORE_TEMPLATE_PATH = "projectCreation/gitignore.tpl";
-    private final FileProcessor fileProcessor;
 
-    public GitIgnoreCreator(FileProcessor fileProcessor) {
-        this.fileProcessor = checkNotNull(fileProcessor);
-    }
+	@VisibleForTesting
+	static final String GIT_IGNORE_TEMPLATE_PATH = "projectCreation/gitignore.tpl";
 
-    @Override
-    public void create(ProjectCreation request) {
-        log.info("Creating .gitignore file");
-        File file = this.fileProcessor.touch(Paths.get(request.getRootDir(), ".gitignore"));
-        writeContentTo(file, request);
-    }
-    private void writeContentTo(File file, ProjectCreation request) {
-        String content = fileProcessor.processTemplate(GIT_IGNORE_TEMPLATE_PATH, ImmutableMap.of("IS_REACT", request.getType() == ApplicationType.REACT, "IS_NODE", request.getType() == ApplicationType.NODE, "IS_JAVA_BASED", isJavaBasedProject(request)));
-        fileProcessor.writeContentTo(file, content);
-    }
+	private final FileProcessor fileProcessor;
 
-    private boolean isJavaBasedProject(ProjectCreation request) {
-        return request.isJavaBasedProject();
-    }
+	public GitIgnoreCreator(FileProcessor fileProcessor) {
+		this.fileProcessor = checkNotNull(fileProcessor);
+	}
+
+	@Override
+	public void create(ProjectCreation request) {
+		log.info("Creating .gitignore file");
+		File file = this.fileProcessor
+				.touch(Paths.get(request.getRootDir(), ".gitignore"));
+		writeContentTo(file, request);
+	}
+
+	private void writeContentTo(File file, ProjectCreation request) {
+		String content = fileProcessor.processTemplate(GIT_IGNORE_TEMPLATE_PATH,
+				ImmutableMap.of("IS_REACT", request.getType() == ApplicationType.REACT,
+						"IS_NODE", request.getType() == ApplicationType.NODE,
+						"IS_JAVA_BASED", isJavaBasedProject(request)));
+		fileProcessor.writeContentTo(file, content);
+	}
+
+	private boolean isJavaBasedProject(ProjectCreation request) {
+		return request.isJavaBasedProject();
+	}
+
 }

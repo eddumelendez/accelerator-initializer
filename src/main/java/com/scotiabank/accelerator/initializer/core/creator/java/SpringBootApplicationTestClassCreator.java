@@ -26,31 +26,36 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @SpringBoot
 class SpringBootApplicationTestClassCreator implements FileCreator<ProjectCreation> {
-    
-    static final String APPLICATION_TEST_TPL_PATH = "projectCreation/ApplicationTest.tpl";
-    private final FileProcessor fileProcessor;
 
-    public SpringBootApplicationTestClassCreator(FileProcessor fileProcessor) {
-        this.fileProcessor = checkNotNull(fileProcessor);
-    }
-    
-    @Override
-    public void create(ProjectCreation request) {
-        log.info("Creating SpringBoot ApplicationTest.java file");
-        Path srcPath = Paths.get(request.getRootDir(), CreatorConstants.SRC_TEST_JAVA_PATH);
-        Path packagePath = Paths.get("com", request.getGroup().toLowerCase(), "ApplicationTest.java");
-        File applicationJavaClass = fileProcessor.touch(srcPath.resolve(packagePath));
-        writeContentTo(applicationJavaClass, request);
-    }
-    
-    private void writeContentTo(File applicationJavaClass, ProjectCreation request) {
-        String packageValue = request.resolvePackageName();
-        String content = fileProcessor.processTemplate(APPLICATION_TEST_TPL_PATH, ImmutableMap.of("PACKAGE", packageValue));
-        fileProcessor.writeContentTo(applicationJavaClass, content);
-    }
-    
-    @Override
-    public int order() {
-        return FileCreationOrder.APPLICATION_TEST_CLASS.order();
-    }
+	static final String APPLICATION_TEST_TPL_PATH = "projectCreation/ApplicationTest.tpl";
+
+	private final FileProcessor fileProcessor;
+
+	public SpringBootApplicationTestClassCreator(FileProcessor fileProcessor) {
+		this.fileProcessor = checkNotNull(fileProcessor);
+	}
+
+	@Override
+	public void create(ProjectCreation request) {
+		log.info("Creating SpringBoot ApplicationTest.java file");
+		Path srcPath = Paths.get(request.getRootDir(),
+				CreatorConstants.SRC_TEST_JAVA_PATH);
+		Path packagePath = Paths.get("com", request.getGroup().toLowerCase(),
+				"ApplicationTest.java");
+		File applicationJavaClass = fileProcessor.touch(srcPath.resolve(packagePath));
+		writeContentTo(applicationJavaClass, request);
+	}
+
+	private void writeContentTo(File applicationJavaClass, ProjectCreation request) {
+		String packageValue = request.resolvePackageName();
+		String content = fileProcessor.processTemplate(APPLICATION_TEST_TPL_PATH,
+				ImmutableMap.of("PACKAGE", packageValue));
+		fileProcessor.writeContentTo(applicationJavaClass, content);
+	}
+
+	@Override
+	public int order() {
+		return FileCreationOrder.APPLICATION_TEST_CLASS.order();
+	}
+
 }

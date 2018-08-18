@@ -5,9 +5,7 @@
 package com.scotiabank.accelerator.initializer.model;
 
 public enum ApplicationType {
-    JAVA_SPRING_BOOT,
-    JAVA_SPRING_BOOT_2,
-    JAVA_LIBRARY,
-    NODE,
-    REACT
+
+	JAVA_SPRING_BOOT, JAVA_SPRING_BOOT_2, JAVA_LIBRARY, NODE, REACT
+
 }

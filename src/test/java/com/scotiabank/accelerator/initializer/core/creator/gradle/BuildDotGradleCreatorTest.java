@@ -22,28 +22,26 @@ import com.scotiabank.accelerator.initializer.core.FileProcessor;
 import com.scotiabank.accelerator.initializer.core.creator.FileCreator;
 
 public class BuildDotGradleCreatorTest {
-    @Mock
-    private FileProcessor fileProcessor;
-    
-    private FileCreator<ProjectCreation> creator;
 
-    @Before
-    public void before() {
-        MockitoAnnotations.initMocks(this);
-        this.creator = new BuildDotGradleCreator(fileProcessor);
-    }
-    
-    
-    @Test
-    public void assertItCreatesBuildDotGradle() {
-        File buildDotGradle = new File("./build.gradle");
-        when(this.fileProcessor.touch(any())).thenReturn(buildDotGradle);
-        ProjectCreation request = ProjectCreation.builder()
-                                    .rootDir(".")
-                                    .name("initializer")
-                                    .group("hopper")
-                                    .build();
-        creator.create(request);
-        verify(this.fileProcessor, times(1)).touch(Paths.get("./build.gradle"));
-    }
+	@Mock
+	private FileProcessor fileProcessor;
+
+	private FileCreator<ProjectCreation> creator;
+
+	@Before
+	public void before() {
+		MockitoAnnotations.initMocks(this);
+		this.creator = new BuildDotGradleCreator(fileProcessor);
+	}
+
+	@Test
+	public void assertItCreatesBuildDotGradle() {
+		File buildDotGradle = new File("./build.gradle");
+		when(this.fileProcessor.touch(any())).thenReturn(buildDotGradle);
+		ProjectCreation request = ProjectCreation.builder().rootDir(".")
+				.name("initializer").group("hopper").build();
+		creator.create(request);
+		verify(this.fileProcessor, times(1)).touch(Paths.get("./build.gradle"));
+	}
+
 }

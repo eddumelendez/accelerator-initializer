@@ -11,9 +11,10 @@ import com.google.common.io.Files;
 
 @Configuration
 public class InitializerConfig {
-    
-    @Bean
-    public String rootDir() {
-        return Files.createTempDir().getAbsolutePath();
-    }
+
+	@Bean
+	public String rootDir() {
+		return Files.createTempDir().getAbsolutePath();
+	}
+
 }

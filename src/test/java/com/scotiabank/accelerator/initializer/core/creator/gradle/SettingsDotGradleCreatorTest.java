@@ -24,33 +24,34 @@ import org.mockito.MockitoAnnotations;
 import com.scotiabank.accelerator.initializer.core.FileProcessor;
 
 public class SettingsDotGradleCreatorTest {
-    @Mock
-    private FileProcessor fileProcessor;
-    
-    private FileCreator<ProjectCreation> creator;
 
-    @Before
-    public void before() {
-        MockitoAnnotations.initMocks(this);
-        this.creator = new SettingsDotGradleCreator(fileProcessor);
-    }
+	@Mock
+	private FileProcessor fileProcessor;
 
-    @Test
-    public void assertItCreateSettingsDotGradle() {
-        ProjectCreation request = ProjectCreation.builder().rootDir(".").build();
-        creator.create(request);
-        verify(this.fileProcessor, times(1)).touch(Paths.get("./settings.gradle"));
-    }
-    
-    @Test
-    public void assertItCopiesContentToFile() throws FileNotFoundException {
-        File f = new File("./settings.gradle");
-        when(this.fileProcessor.touch(any())).thenReturn(f);
-        ProjectCreation request = ProjectCreation.builder()
-            .name("hopper")
-            .rootDir(".")
-            .build();
-        creator.create(request);
-        verify(this.fileProcessor, times(1)).writeContentTo(eq(f), eq("rootProject.name = 'hopper'"));
-    }
+	private FileCreator<ProjectCreation> creator;
+
+	@Before
+	public void before() {
+		MockitoAnnotations.initMocks(this);
+		this.creator = new SettingsDotGradleCreator(fileProcessor);
+	}
+
+	@Test
+	public void assertItCreateSettingsDotGradle() {
+		ProjectCreation request = ProjectCreation.builder().rootDir(".").build();
+		creator.create(request);
+		verify(this.fileProcessor, times(1)).touch(Paths.get("./settings.gradle"));
+	}
+
+	@Test
+	public void assertItCopiesContentToFile() throws FileNotFoundException {
+		File f = new File("./settings.gradle");
+		when(this.fileProcessor.touch(any())).thenReturn(f);
+		ProjectCreation request = ProjectCreation.builder().name("hopper").rootDir(".")
+				.build();
+		creator.create(request);
+		verify(this.fileProcessor, times(1)).writeContentTo(eq(f),
+				eq("rootProject.name = 'hopper'"));
+	}
+
 }

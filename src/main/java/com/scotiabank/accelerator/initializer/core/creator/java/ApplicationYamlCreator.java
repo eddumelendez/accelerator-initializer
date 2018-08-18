@@ -23,23 +23,26 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @SpringBoot
 class ApplicationYamlCreator implements FileCreator<ProjectCreation> {
-    @VisibleForTesting
-    static final String APPLICATION_YML_PATH = "/src/main/resources/application.yml";
-    private final FileProcessor fileProcessor;
 
-    public ApplicationYamlCreator(FileProcessor fileProcessor) {
-        this.fileProcessor = checkNotNull(fileProcessor);
-    }
-    
-    @Override
-    public void create(ProjectCreation request) {
-        log.info("Creating application.yml file for {}-{} ", request.getGroup(), request.getName());
-        fileProcessor.touch(Paths.get(request.getRootDir(), APPLICATION_YML_PATH));
-    }
-    
-    @Override
-    public int order() {
-        return FileCreationOrder.APPLICATION_YML.order();
-    }
-    
+	@VisibleForTesting
+	static final String APPLICATION_YML_PATH = "/src/main/resources/application.yml";
+
+	private final FileProcessor fileProcessor;
+
+	public ApplicationYamlCreator(FileProcessor fileProcessor) {
+		this.fileProcessor = checkNotNull(fileProcessor);
+	}
+
+	@Override
+	public void create(ProjectCreation request) {
+		log.info("Creating application.yml file for {}-{} ", request.getGroup(),
+				request.getName());
+		fileProcessor.touch(Paths.get(request.getRootDir(), APPLICATION_YML_PATH));
+	}
+
+	@Override
+	public int order() {
+		return FileCreationOrder.APPLICATION_YML.order();
+	}
+
 }

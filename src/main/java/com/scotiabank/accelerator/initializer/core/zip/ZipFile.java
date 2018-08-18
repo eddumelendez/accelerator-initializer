@@ -7,6 +7,7 @@ package com.scotiabank.accelerator.initializer.core.zip;
 import java.io.File;
 
 public interface ZipFile {
-    
-    File zip(String projectPath);
+
+	File zip(String projectPath);
+
 }

@@ -20,16 +20,21 @@ import java.util.List;
 @Getter
 @Builder
 public class ExceptionResult {
-    private HttpStatus status;
-    @JsonSerialize(using = RFC1123DateTimeSerializer.class)
-    private ZonedDateTime timeStamp;
-    private String message;
-    private List<ValidationError> errors;
 
-    public void addError(ValidationError error) {
-        if (errors == null) {
-            errors = new ArrayList<>();
-        }
-        errors.add(error);
-    }
+	private HttpStatus status;
+
+	@JsonSerialize(using = RFC1123DateTimeSerializer.class)
+	private ZonedDateTime timeStamp;
+
+	private String message;
+
+	private List<ValidationError> errors;
+
+	public void addError(ValidationError error) {
+		if (errors == null) {
+			errors = new ArrayList<>();
+		}
+		errors.add(error);
+	}
+
 }

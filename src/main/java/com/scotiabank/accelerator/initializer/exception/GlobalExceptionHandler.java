@@ -32,53 +32,57 @@ import lombok.extern.slf4j.Slf4j;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @Autowired
-    private MessageSource messageSource;
+	@Autowired
+	private MessageSource messageSource;
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
-    public ExceptionResult resolveValidationErrors(MethodArgumentNotValidException exception) {
-        log.error("Validation failed", exception);
-        Locale locale = LocaleContextHolder.getLocale();
-        ExceptionResult result = ExceptionResult.builder().status(HttpStatus.BAD_REQUEST).timeStamp(ZonedDateTime.now()).message("Validation error").build();
-        BindingResult bindingResult = exception.getBindingResult();
-        for (ObjectError error : bindingResult.getAllErrors()) {
-            val validationErrorBuilder = ValidationError.builder();
-            if (error instanceof FieldError) {
-                validationErrorBuilder
-                    .objectName(error.getObjectName())
-                    .field(((FieldError) error).getField())
-                    .message(messageSource.getMessage(error, locale))
-                    .rejectedValue(((FieldError) error).getRejectedValue());
-            } else {
-                validationErrorBuilder
-                    .objectName(error.getObjectName())
-                    .message(messageSource.getMessage(error, locale));
-            }
-            result.addError(validationErrorBuilder.build());
-        }
-        return result;
-    }
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ResponseBody
+	public ExceptionResult resolveValidationErrors(
+			MethodArgumentNotValidException exception) {
+		log.error("Validation failed", exception);
+		Locale locale = LocaleContextHolder.getLocale();
+		ExceptionResult result = ExceptionResult.builder().status(HttpStatus.BAD_REQUEST)
+				.timeStamp(ZonedDateTime.now()).message("Validation error").build();
+		BindingResult bindingResult = exception.getBindingResult();
+		for (ObjectError error : bindingResult.getAllErrors()) {
+			val validationErrorBuilder = ValidationError.builder();
+			if (error instanceof FieldError) {
+				validationErrorBuilder.objectName(error.getObjectName())
+						.field(((FieldError) error).getField())
+						.message(messageSource.getMessage(error, locale))
+						.rejectedValue(((FieldError) error).getRejectedValue());
+			}
+			else {
+				validationErrorBuilder.objectName(error.getObjectName())
+						.message(messageSource.getMessage(error, locale));
+			}
+			result.addError(validationErrorBuilder.build());
+		}
+		return result;
+	}
 
-    @ExceptionHandler(InitializerException.class)
-    public ResponseEntity<ExceptionResult> resolveGenericException(InitializerException exception) {
-        log.error("An error occured", exception);
-        Locale locale = LocaleContextHolder.getLocale();
-        String message = messageSource.getMessage(exception.getMessage(), exception.getArgs(), exception.getMessage(), locale);
-        ExceptionResult result = ExceptionResult.builder().status(exception.getStatus()).timeStamp(ZonedDateTime.now()).message(message).build();
-        return ResponseEntity.status(exception.getStatus()).body(result);
-    }
-    
-    @ExceptionHandler(TimeoutException.class)
-    public ResponseEntity<ExceptionResult> resolveGenericException(TimeoutException exception) {
-        log.error("An error occured", exception);
-        String message = "Timeout has occured";
-        ExceptionResult result = ExceptionResult.builder()
-                                     .status(HttpStatus.SERVICE_UNAVAILABLE)
-                                     .timeStamp(ZonedDateTime.now())
-                                     .message(message)
-                                     .build();
-        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(result);
-    }
+	@ExceptionHandler(InitializerException.class)
+	public ResponseEntity<ExceptionResult> resolveGenericException(
+			InitializerException exception) {
+		log.error("An error occured", exception);
+		Locale locale = LocaleContextHolder.getLocale();
+		String message = messageSource.getMessage(exception.getMessage(),
+				exception.getArgs(), exception.getMessage(), locale);
+		ExceptionResult result = ExceptionResult.builder().status(exception.getStatus())
+				.timeStamp(ZonedDateTime.now()).message(message).build();
+		return ResponseEntity.status(exception.getStatus()).body(result);
+	}
+
+	@ExceptionHandler(TimeoutException.class)
+	public ResponseEntity<ExceptionResult> resolveGenericException(
+			TimeoutException exception) {
+		log.error("An error occured", exception);
+		String message = "Timeout has occured";
+		ExceptionResult result = ExceptionResult.builder()
+				.status(HttpStatus.SERVICE_UNAVAILABLE).timeStamp(ZonedDateTime.now())
+				.message(message).build();
+		return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(result);
+	}
+
 }

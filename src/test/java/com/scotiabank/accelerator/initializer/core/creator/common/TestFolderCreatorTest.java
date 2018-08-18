@@ -17,23 +17,23 @@ import java.nio.file.Paths;
 import static org.junit.Assert.assertTrue;
 
 public class TestFolderCreatorTest {
-    
-    @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
-    private FileCreator<ProjectCreation> creator;
 
-    
-    @Before
-    public void before() {
-        this.creator = new TestFolderCreator();
-    }
-    
-    @Test
-    public void assertFolderIsCreated() throws IOException {
-        ProjectCreation request = ProjectCreation.builder()
-                        .rootDir(folder.getRoot().getAbsolutePath())
-                        .build();
-        creator.create(request);
-        assertTrue(Paths.get(request.getRootDir(), "test").toFile().exists());
-    }
+	@Rule
+	public TemporaryFolder folder = new TemporaryFolder();
+
+	private FileCreator<ProjectCreation> creator;
+
+	@Before
+	public void before() {
+		this.creator = new TestFolderCreator();
+	}
+
+	@Test
+	public void assertFolderIsCreated() throws IOException {
+		ProjectCreation request = ProjectCreation.builder()
+				.rootDir(folder.getRoot().getAbsolutePath()).build();
+		creator.create(request);
+		assertTrue(Paths.get(request.getRootDir(), "test").toFile().exists());
+	}
+
 }

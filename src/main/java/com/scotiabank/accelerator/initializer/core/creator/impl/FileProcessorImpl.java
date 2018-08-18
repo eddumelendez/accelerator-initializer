@@ -30,84 +30,87 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 class FileProcessorImpl implements FileProcessor {
 
-    
-    private final MustacheRenderer mustacheRenderer;
-    
-    public FileProcessorImpl(MustacheRenderer mustacheRenderer) {
-        this.mustacheRenderer = checkNotNull(mustacheRenderer);
-    }
-    
-    @Override
-    public String processTemplate(String templateName, Map<String, Object> vars) {
-        return mustacheRenderer.process(templateName, vars);
-    }
+	private final MustacheRenderer mustacheRenderer;
 
-    @Override
-    public void writeContentTo(File target, String content) {
-        try {
-            Files.append(content, target, Charsets.UTF_8);
-        } catch (IOException e) {
-            throw new InitializerException("It was not possible to write content to template", e);
-        }
-    }
+	public FileProcessorImpl(MustacheRenderer mustacheRenderer) {
+		this.mustacheRenderer = checkNotNull(mustacheRenderer);
+	}
 
-    @Override
-    public byte[] fileToByteArray(File file) {
-        try(InputStream is = new FileInputStream(file)) {
-            return StreamUtils.copyToByteArray(is);
-        } catch (IOException e) {
-            throw new InitializerException("It was not possible to generate project {}", file.getName(), e);
-        }
-    }
+	@Override
+	public String processTemplate(String templateName, Map<String, Object> vars) {
+		return mustacheRenderer.process(templateName, vars);
+	}
 
-    @Override
-    public void copy(InputStream from, File to) {
-        try(OutputStream os = new FileOutputStream(to); InputStream fromWrapper = from) {
-            StreamUtils.copy(fromWrapper, os);
-        } catch (IOException e) {
-            throw new InitializerException("It was not possible to copy file {}", e);
-        }
-    }
+	@Override
+	public void writeContentTo(File target, String content) {
+		try {
+			Files.append(content, target, Charsets.UTF_8);
+		}
+		catch (IOException e) {
+			throw new InitializerException(
+					"It was not possible to write content to template", e);
+		}
+	}
 
-    @Override
-    public File touch(Path path) {
-        try {
-            File file = path.toFile();
-            Files.touch(file);
-            return file;
-        } catch (IOException e) {
-            log.error("It was not possible create file {}", path);
-            throw new InitializerException("It was not possible to create file", e);
-        }
-    }
-    
-    @Override
-    public void createDirectories(File file) {
-        file.mkdirs();
-    }
+	@Override
+	public byte[] fileToByteArray(File file) {
+		try (InputStream is = new FileInputStream(file)) {
+			return StreamUtils.copyToByteArray(is);
+		}
+		catch (IOException e) {
+			throw new InitializerException("It was not possible to generate project {}",
+					file.getName(), e);
+		}
+	}
 
-    @Override
-    public InputStream loadResourceFromClassPath(String file) {
-        return this.getClass()
-                   .getClassLoader()
-                   .getResourceAsStream(file);
-    }
+	@Override
+	public void copy(InputStream from, File to) {
+		try (OutputStream os = new FileOutputStream(to); InputStream fromWrapper = from) {
+			StreamUtils.copy(fromWrapper, os);
+		}
+		catch (IOException e) {
+			throw new InitializerException("It was not possible to copy file {}", e);
+		}
+	}
 
-    @Override
-    public void delete(File file) {
-        boolean deleted = file.delete();
-        log.info("File {} deleted : {}", file.getName(), deleted);
-    }
-    
-    @Override
-    public void moveFile(File from, File to) {
-        try {
-            Files.move(from, to);
-        } catch (IOException e) {
-            throw new InitializerException("It was not possible to move file from {} to {}",e, from, to);
-        }
-    }
-    
-    
-    
+	@Override
+	public File touch(Path path) {
+		try {
+			File file = path.toFile();
+			Files.touch(file);
+			return file;
+		}
+		catch (IOException e) {
+			log.error("It was not possible create file {}", path);
+			throw new InitializerException("It was not possible to create file", e);
+		}
+	}
+
+	@Override
+	public void createDirectories(File file) {
+		file.mkdirs();
+	}
+
+	@Override
+	public InputStream loadResourceFromClassPath(String file) {
+		return this.getClass().getClassLoader().getResourceAsStream(file);
+	}
+
+	@Override
+	public void delete(File file) {
+		boolean deleted = file.delete();
+		log.info("File {} deleted : {}", file.getName(), deleted);
+	}
+
+	@Override
+	public void moveFile(File from, File to) {
+		try {
+			Files.move(from, to);
+		}
+		catch (IOException e) {
+			throw new InitializerException(
+					"It was not possible to move file from {} to {}", e, from, to);
+		}
+	}
+
 }

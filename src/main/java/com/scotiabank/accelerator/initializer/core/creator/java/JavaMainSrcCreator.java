@@ -20,21 +20,24 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @SpringBoot
 @JavaLibrary
 class JavaMainSrcCreator implements FileCreator<ProjectCreation> {
-    
-    private final FileProcessor processor;
 
-    public JavaMainSrcCreator(FileProcessor processor) {
-        this.processor = checkNotNull(processor);
-    }
-    
-    @Override
-    public void create(ProjectCreation request) {
-        processor.createDirectories(Paths.get(request.getRootDir(), "src/main/java").toFile());
-        processor.createDirectories(Paths.get(request.getRootDir(), "src/main/resources").toFile());
-    }
-    
-    @Override
-    public int order() {
-        return FileCreationOrder.JAVA_MAIN_FOLDER.order();
-    }
+	private final FileProcessor processor;
+
+	public JavaMainSrcCreator(FileProcessor processor) {
+		this.processor = checkNotNull(processor);
+	}
+
+	@Override
+	public void create(ProjectCreation request) {
+		processor.createDirectories(
+				Paths.get(request.getRootDir(), "src/main/java").toFile());
+		processor.createDirectories(
+				Paths.get(request.getRootDir(), "src/main/resources").toFile());
+	}
+
+	@Override
+	public int order() {
+		return FileCreationOrder.JAVA_MAIN_FOLDER.order();
+	}
+
 }

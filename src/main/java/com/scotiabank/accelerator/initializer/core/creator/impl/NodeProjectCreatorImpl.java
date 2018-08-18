@@ -19,22 +19,21 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Component
 class NodeProjectCreatorImpl implements ProjectCreator<ProjectCreation> {
 
-    private List<FileCreator<ProjectCreation>> fileCreators;
+	private List<FileCreator<ProjectCreation>> fileCreators;
 
-    public NodeProjectCreatorImpl(@Node List<FileCreator<ProjectCreation>> fileCreators) {
-        this.fileCreators = checkNotNull(fileCreators);
-    }
+	public NodeProjectCreatorImpl(@Node List<FileCreator<ProjectCreation>> fileCreators) {
+		this.fileCreators = checkNotNull(fileCreators);
+	}
 
-    @Override
-    public boolean skip(ProjectCreation projectCreation) {
-        return !ApplicationType.NODE.equals(projectCreation.getType());
-    }
+	@Override
+	public boolean skip(ProjectCreation projectCreation) {
+		return !ApplicationType.NODE.equals(projectCreation.getType());
+	}
 
-    @Override
-    public void create(ProjectCreation request) {
-        fileCreators
-                .stream()
-                .sorted(Comparator.comparingInt(FileCreator::order))
-                .forEach(creator -> creator.create(request));
-    }
+	@Override
+	public void create(ProjectCreation request) {
+		fileCreators.stream().sorted(Comparator.comparingInt(FileCreator::order))
+				.forEach(creator -> creator.create(request));
+	}
+
 }

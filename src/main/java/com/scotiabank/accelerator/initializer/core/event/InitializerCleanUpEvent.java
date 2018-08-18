@@ -10,5 +10,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class InitializerCleanUpEvent {
-    private String rootdir;
+
+	private String rootdir;
+
 }

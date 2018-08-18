@@ -5,11 +5,15 @@
 package com.scotiabank.accelerator.initializer.core.creator;
 
 public final class CreatorConstants {
-    public static final String PACKAGE_PATH = "com/%s";
-    public static final String SRC_MAIN_JAVA_PATH = "src/main/java";
-    public static final String SRC_TEST_JAVA_PATH = "src/test/java";
 
-    private CreatorConstants() {
-        //hide the implicit public constructor
-    }
+	public static final String PACKAGE_PATH = "com/%s";
+
+	public static final String SRC_MAIN_JAVA_PATH = "src/main/java";
+
+	public static final String SRC_TEST_JAVA_PATH = "src/test/java";
+
+	private CreatorConstants() {
+		// hide the implicit public constructor
+	}
+
 }

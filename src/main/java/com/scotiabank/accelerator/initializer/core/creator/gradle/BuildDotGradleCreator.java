@@ -29,44 +29,39 @@ import lombok.extern.slf4j.Slf4j;
 @JavaLibrary
 class BuildDotGradleCreator implements FileCreator<ProjectCreation> {
 
-    @VisibleForTesting
-    static final String BUILD_DOT_GRADLE_FILE_NAME = "build.gradle";
+	@VisibleForTesting
+	static final String BUILD_DOT_GRADLE_FILE_NAME = "build.gradle";
 
-    private final FileProcessor fileProcessor;
+	private final FileProcessor fileProcessor;
 
-    public BuildDotGradleCreator(FileProcessor fileProcessor) {
-        this.fileProcessor = checkNotNull(fileProcessor);
-    }
-    
-    @Override
-    public void create(ProjectCreation request) {
-        log.info("Creating build.gradle");
-        File buildDotGradle = fileProcessor.touch(Paths.get(request.getRootDir(), BUILD_DOT_GRADLE_FILE_NAME));
-        processTemplate(request, buildDotGradle);
-    }
-    
-    private void processTemplate(ProjectCreation request, File buildDotGradle) {
-        log.info("Parsing build.gradle template");
-        Map<String, Object> args = createArgs(request);
-        new BuildGradleTemplateParser(fileProcessor, args, buildDotGradle)
-                .addBuildScript()
-                .addApplyPlugin()
-                .addProjectMetadata()
-                .addRepositories()
-                .addDependencies()
-                .addJar()
-                .addIntegrationTest();
-    }
-    
-    private Map<String, Object> createArgs(ProjectCreation request) {
-        return ImmutableMap.<String, Object>builder()
-                            .put("ACCP_VERSION", "1.2.1")
-                            .put("SPRING_BOOT_VERSION", request.discoverySpringBootVersion())
-                            .put("IS_SPRING_BOOT", request.isSpringBootApp())
-                            .put("IS_SPRING_BOOT2", request.getType() == ApplicationType.JAVA_SPRING_BOOT_2)
-                            .put("REPOSITORY_NAME", request.getName())
-                            .put("GROUP_ID", request.getGroup())
-                            .build();
-    }
-    
+	public BuildDotGradleCreator(FileProcessor fileProcessor) {
+		this.fileProcessor = checkNotNull(fileProcessor);
+	}
+
+	@Override
+	public void create(ProjectCreation request) {
+		log.info("Creating build.gradle");
+		File buildDotGradle = fileProcessor
+				.touch(Paths.get(request.getRootDir(), BUILD_DOT_GRADLE_FILE_NAME));
+		processTemplate(request, buildDotGradle);
+	}
+
+	private void processTemplate(ProjectCreation request, File buildDotGradle) {
+		log.info("Parsing build.gradle template");
+		Map<String, Object> args = createArgs(request);
+		new BuildGradleTemplateParser(fileProcessor, args, buildDotGradle)
+				.addBuildScript().addApplyPlugin().addProjectMetadata().addRepositories()
+				.addDependencies().addJar().addIntegrationTest();
+	}
+
+	private Map<String, Object> createArgs(ProjectCreation request) {
+		return ImmutableMap.<String, Object>builder().put("ACCP_VERSION", "1.2.1")
+				.put("SPRING_BOOT_VERSION", request.discoverySpringBootVersion())
+				.put("IS_SPRING_BOOT", request.isSpringBootApp())
+				.put("IS_SPRING_BOOT2",
+						request.getType() == ApplicationType.JAVA_SPRING_BOOT_2)
+				.put("REPOSITORY_NAME", request.getName())
+				.put("GROUP_ID", request.getGroup()).build();
+	}
+
 }

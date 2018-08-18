@@ -28,37 +28,44 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Node
 @React
 class ManifestFileCreator implements FileCreator<ProjectCreation> {
-    @VisibleForTesting
-    static final String MANIFEST_FILE_TEMPLATE = "projectCreation/manifest.tpl";
-    private static final String APPLICATION_NAME = "%s";
-    private static final String FILE_NAME = "manifest.yml";
-    private FileProcessor fileProcessor;
 
-    public ManifestFileCreator(FileProcessor fileProcessor) {
-        this.fileProcessor = checkNotNull(fileProcessor);
-    }
+	@VisibleForTesting
+	static final String MANIFEST_FILE_TEMPLATE = "projectCreation/manifest.tpl";
 
-    @Override
-    public void create(ProjectCreation request) {
-        log.info("Creating manifest files for project {}", request.getName());
-            String templateContent = processTemplate(request);
-            String fileName = String.format(FILE_NAME);
-            File manifestFile = createFile(fileName, request.getRootDir());
-            fileProcessor.writeContentTo(manifestFile, templateContent);
-    }
+	private static final String APPLICATION_NAME = "%s";
 
-    private String processTemplate(ProjectCreation request) {
-        String applicationName = String.format(APPLICATION_NAME, request.getName());
-        return fileProcessor.processTemplate(MANIFEST_FILE_TEMPLATE,
-                ImmutableMap.of("APPLICATION_NAME", applicationName, "IS_NODE_APP", request.isNodeApp(), "IS_REACT", request.getType() == ApplicationType.REACT));
-    }
+	private static final String FILE_NAME = "manifest.yml";
 
-    private File createFile(String fileName, String projectDir) {
-        return fileProcessor.touch(Paths.get(projectDir, "environments", fileName));
-    }
+	private FileProcessor fileProcessor;
 
-    @Override
-    public int order() {
-        return FileCreationOrder.MANIFEST_FILES.order();
-    }
+	public ManifestFileCreator(FileProcessor fileProcessor) {
+		this.fileProcessor = checkNotNull(fileProcessor);
+	}
+
+	@Override
+	public void create(ProjectCreation request) {
+		log.info("Creating manifest files for project {}", request.getName());
+		String templateContent = processTemplate(request);
+		String fileName = String.format(FILE_NAME);
+		File manifestFile = createFile(fileName, request.getRootDir());
+		fileProcessor.writeContentTo(manifestFile, templateContent);
+	}
+
+	private String processTemplate(ProjectCreation request) {
+		String applicationName = String.format(APPLICATION_NAME, request.getName());
+		return fileProcessor.processTemplate(MANIFEST_FILE_TEMPLATE,
+				ImmutableMap.of("APPLICATION_NAME", applicationName, "IS_NODE_APP",
+						request.isNodeApp(), "IS_REACT",
+						request.getType() == ApplicationType.REACT));
+	}
+
+	private File createFile(String fileName, String projectDir) {
+		return fileProcessor.touch(Paths.get(projectDir, "environments", fileName));
+	}
+
+	@Override
+	public int order() {
+		return FileCreationOrder.MANIFEST_FILES.order();
+	}
+
 }

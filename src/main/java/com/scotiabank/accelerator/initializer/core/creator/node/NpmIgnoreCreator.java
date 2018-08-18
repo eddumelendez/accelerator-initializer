@@ -22,19 +22,24 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Slf4j
 @Node
 class NpmIgnoreCreator implements FileCreator<ProjectCreation> {
-    @VisibleForTesting
-    static final String NPM_IGNORE_TEMPLATE_PATH = "templates/projectCreation/node/npmignore.tpl";
-    private final FileProcessor fileProcessor;
 
-    public NpmIgnoreCreator(FileProcessor fileProcessor) {
-        this.fileProcessor = checkNotNull(fileProcessor);
-    }
-    
-    @Override
-    public void create(ProjectCreation request) {
-        log.info("Creating .npmignore file");
-        InputStream inputStream = this.fileProcessor.loadResourceFromClassPath(NPM_IGNORE_TEMPLATE_PATH);
-        File file = this.fileProcessor.touch(Paths.get(request.getRootDir(), ".npmignore"));
-        this.fileProcessor.copy(inputStream, file);
-    }
+	@VisibleForTesting
+	static final String NPM_IGNORE_TEMPLATE_PATH = "templates/projectCreation/node/npmignore.tpl";
+
+	private final FileProcessor fileProcessor;
+
+	public NpmIgnoreCreator(FileProcessor fileProcessor) {
+		this.fileProcessor = checkNotNull(fileProcessor);
+	}
+
+	@Override
+	public void create(ProjectCreation request) {
+		log.info("Creating .npmignore file");
+		InputStream inputStream = this.fileProcessor
+				.loadResourceFromClassPath(NPM_IGNORE_TEMPLATE_PATH);
+		File file = this.fileProcessor
+				.touch(Paths.get(request.getRootDir(), ".npmignore"));
+		this.fileProcessor.copy(inputStream, file);
+	}
+
 }

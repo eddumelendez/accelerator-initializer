@@ -22,19 +22,24 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Slf4j
 @React
 class StaticfileCreator implements FileCreator<ProjectCreation> {
-    @VisibleForTesting
-    static final String STATICFILE_TEMPLATE_PATH = "templates/projectCreation/react/Staticfile.tpl";
-    private final FileProcessor fileProcessor;
 
-    public StaticfileCreator(FileProcessor fileProcessor) {
-        this.fileProcessor = checkNotNull(fileProcessor);
-    }
-    
-    @Override
-    public void create(ProjectCreation request) {
-        log.info("Creating Staticfile");
-        InputStream inputStream = this.fileProcessor.loadResourceFromClassPath(STATICFILE_TEMPLATE_PATH);
-        File file = this.fileProcessor.touch(Paths.get(request.getRootDir(), "Staticfile"));
-        this.fileProcessor.copy(inputStream, file);
-    }
+	@VisibleForTesting
+	static final String STATICFILE_TEMPLATE_PATH = "templates/projectCreation/react/Staticfile.tpl";
+
+	private final FileProcessor fileProcessor;
+
+	public StaticfileCreator(FileProcessor fileProcessor) {
+		this.fileProcessor = checkNotNull(fileProcessor);
+	}
+
+	@Override
+	public void create(ProjectCreation request) {
+		log.info("Creating Staticfile");
+		InputStream inputStream = this.fileProcessor
+				.loadResourceFromClassPath(STATICFILE_TEMPLATE_PATH);
+		File file = this.fileProcessor
+				.touch(Paths.get(request.getRootDir(), "Staticfile"));
+		this.fileProcessor.copy(inputStream, file);
+	}
+
 }

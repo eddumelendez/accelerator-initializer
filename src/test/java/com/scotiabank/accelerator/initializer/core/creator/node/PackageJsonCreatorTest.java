@@ -24,49 +24,46 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 public class PackageJsonCreatorTest {
-    
-    @Mock
-    private FileProcessor fileProcessor;
-    @Captor
-    private ArgumentCaptor<Path> pathCaptor;
-    @Captor
-    private ArgumentCaptor<Map<String,Object>> mapCaptor;
-    
-    private FileCreator<ProjectCreation> creator;
-    
-    @Before
-    public void before() {
-        MockitoAnnotations.initMocks(this);
-        this.creator = new PackageJsonCreator(fileProcessor);
-    }
 
-    @Test
-    public void assertPackageJsonIsCreated() {
-        ProjectCreation request = ProjectCreation.builder()
-                        .group("hopper")
-                        .name("test-app")
-                        .rootDir(".")
-                        .build();
-        this.creator.create(request);
-        verify(this.fileProcessor, times(1)).touch(pathCaptor.capture());
-        Path packageJsonPath = pathCaptor.getValue();
-        assertEquals(Paths.get("./package.json"), packageJsonPath);
-    }
-    
-    @Test
-    public void assertTemplateIsParsed() {
-        ProjectCreation request = ProjectCreation.builder()
-                        .group("hopper")
-                        .name("test-app")
-                        .rootDir(".")
-                        .build();
-        this.creator.create(request);
-        verify(this.fileProcessor, times(1)).processTemplate(eq(PackageJsonCreator.PACKAGE_JSON_TPL_PATH),
-                                                                mapCaptor.capture());
-        
-        Map<String, Object> args = mapCaptor.getValue();
-        assertEquals("hopper-test-app", args.get("APP_NAME"));
-        assertEquals("hopper", args.get("PROJECT_NAME"));
-        assertEquals("test-app", args.get("REPO_NAME"));
-    }
+	@Mock
+	private FileProcessor fileProcessor;
+
+	@Captor
+	private ArgumentCaptor<Path> pathCaptor;
+
+	@Captor
+	private ArgumentCaptor<Map<String, Object>> mapCaptor;
+
+	private FileCreator<ProjectCreation> creator;
+
+	@Before
+	public void before() {
+		MockitoAnnotations.initMocks(this);
+		this.creator = new PackageJsonCreator(fileProcessor);
+	}
+
+	@Test
+	public void assertPackageJsonIsCreated() {
+		ProjectCreation request = ProjectCreation.builder().group("hopper")
+				.name("test-app").rootDir(".").build();
+		this.creator.create(request);
+		verify(this.fileProcessor, times(1)).touch(pathCaptor.capture());
+		Path packageJsonPath = pathCaptor.getValue();
+		assertEquals(Paths.get("./package.json"), packageJsonPath);
+	}
+
+	@Test
+	public void assertTemplateIsParsed() {
+		ProjectCreation request = ProjectCreation.builder().group("hopper")
+				.name("test-app").rootDir(".").build();
+		this.creator.create(request);
+		verify(this.fileProcessor, times(1)).processTemplate(
+				eq(PackageJsonCreator.PACKAGE_JSON_TPL_PATH), mapCaptor.capture());
+
+		Map<String, Object> args = mapCaptor.getValue();
+		assertEquals("hopper-test-app", args.get("APP_NAME"));
+		assertEquals("hopper", args.get("PROJECT_NAME"));
+		assertEquals("test-app", args.get("REPO_NAME"));
+	}
+
 }

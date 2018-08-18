@@ -17,22 +17,23 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 public class ZipFileTest {
-    
-    @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
-    
-    private ZipFile zipFile;
-    
-    @Before
-    public void before() {
-        this.zipFile = new ZipFileImpl();
-    }
-    
-    @Test
-    public void assertItCreatesAZipFile() throws IOException {
-        File file = folder.newFolder("test");
-        this.zipFile.zip(file.getAbsolutePath());
-        File zip = new File(file.getParentFile(), "test.zip");
-        assertTrue(zip.exists());
-    }
+
+	@Rule
+	public TemporaryFolder folder = new TemporaryFolder();
+
+	private ZipFile zipFile;
+
+	@Before
+	public void before() {
+		this.zipFile = new ZipFileImpl();
+	}
+
+	@Test
+	public void assertItCreatesAZipFile() throws IOException {
+		File file = folder.newFolder("test");
+		this.zipFile.zip(file.getAbsolutePath());
+		File zip = new File(file.getParentFile(), "test.zip");
+		assertTrue(zip.exists());
+	}
+
 }

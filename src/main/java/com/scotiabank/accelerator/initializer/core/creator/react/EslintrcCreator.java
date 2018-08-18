@@ -22,20 +22,24 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Slf4j
 @React
 class EslintrcCreator implements FileCreator<ProjectCreation> {
-    @VisibleForTesting
-    static final String ESLINTRC_TEMPLATE_PATH = "templates/projectCreation/react/eslintrc.tpl";
-    private final FileProcessor fileProcessor;
 
-    public EslintrcCreator(FileProcessor fileProcessor) {
-        this.fileProcessor = checkNotNull(fileProcessor);
-    }
-    
-    @Override
-    public void create(ProjectCreation request) {
-        log.info("Creating .eslintrc file");
-        InputStream inputStream = this.fileProcessor.loadResourceFromClassPath(ESLINTRC_TEMPLATE_PATH);
-        File file = this.fileProcessor.touch(Paths.get(request.getRootDir(), ".eslintrc"));
-        this.fileProcessor.copy(inputStream, file);
-    }
+	@VisibleForTesting
+	static final String ESLINTRC_TEMPLATE_PATH = "templates/projectCreation/react/eslintrc.tpl";
+
+	private final FileProcessor fileProcessor;
+
+	public EslintrcCreator(FileProcessor fileProcessor) {
+		this.fileProcessor = checkNotNull(fileProcessor);
+	}
+
+	@Override
+	public void create(ProjectCreation request) {
+		log.info("Creating .eslintrc file");
+		InputStream inputStream = this.fileProcessor
+				.loadResourceFromClassPath(ESLINTRC_TEMPLATE_PATH);
+		File file = this.fileProcessor
+				.touch(Paths.get(request.getRootDir(), ".eslintrc"));
+		this.fileProcessor.copy(inputStream, file);
+	}
 
 }

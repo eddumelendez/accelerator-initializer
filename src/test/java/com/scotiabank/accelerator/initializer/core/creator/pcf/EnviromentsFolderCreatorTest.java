@@ -17,23 +17,23 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 public class EnviromentsFolderCreatorTest {
-    
-    @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
-    private FileCreator<ProjectCreation> creator;
 
-    
-    @Before
-    public void before() {
-        this.creator = new EnvironmentsFolderCreator();
-    }
-    
-    @Test
-    public void assertFolderIsCreated() throws IOException {
-        ProjectCreation request = ProjectCreation.builder()
-                        .rootDir(folder.getRoot().getAbsolutePath())
-                        .build();
-        creator.create(request);
-        assertTrue(Paths.get(request.getRootDir(), "environments").toFile().exists());
-    }
+	@Rule
+	public TemporaryFolder folder = new TemporaryFolder();
+
+	private FileCreator<ProjectCreation> creator;
+
+	@Before
+	public void before() {
+		this.creator = new EnvironmentsFolderCreator();
+	}
+
+	@Test
+	public void assertFolderIsCreated() throws IOException {
+		ProjectCreation request = ProjectCreation.builder()
+				.rootDir(folder.getRoot().getAbsolutePath()).build();
+		creator.create(request);
+		assertTrue(Paths.get(request.getRootDir(), "environments").toFile().exists());
+	}
+
 }

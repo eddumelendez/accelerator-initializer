@@ -18,13 +18,13 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 public class InitializerCleanUpListener {
-    
-    @EventListener(InitializerCleanUpEvent.class)
-    public void handleOrderCreatedEvent(InitializerCleanUpEvent event) {
-        Path parent = Paths.get(event.getRootdir()).getParent();
-        log.info("Cleaning folder {}", parent);
-        FileUtils.deleteQuietly(parent.toFile());
-        
-        
-    }
+
+	@EventListener(InitializerCleanUpEvent.class)
+	public void handleOrderCreatedEvent(InitializerCleanUpEvent event) {
+		Path parent = Paths.get(event.getRootdir()).getParent();
+		log.info("Cleaning folder {}", parent);
+		FileUtils.deleteQuietly(parent.toFile());
+
+	}
+
 }

@@ -24,42 +24,49 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @React
 public class StaticAssetsCreator implements FileCreator<ProjectCreation> {
 
-    @VisibleForTesting
-    static final String INDEX_CSS_TPL_PATH = "templates/projectCreation/react/index.css.tpl";
-    @VisibleForTesting
-    static final String APP_CSS_TPL_PATH = "templates/projectCreation/react/App.css.tpl";
-    @VisibleForTesting
-    static final String LOGO_SVG_PATH = "templates/projectCreation/react/logo.svg";
-    @VisibleForTesting
-    static final String FAVICON_ICO_PATH = "templates/projectCreation/react/favicon.ico";
+	@VisibleForTesting
+	static final String INDEX_CSS_TPL_PATH = "templates/projectCreation/react/index.css.tpl";
 
-    private final FileProcessor fileProcessor;
+	@VisibleForTesting
+	static final String APP_CSS_TPL_PATH = "templates/projectCreation/react/App.css.tpl";
 
-    public StaticAssetsCreator(FileProcessor fileProcessor) {
-        this.fileProcessor = checkNotNull(fileProcessor);
-    }
+	@VisibleForTesting
+	static final String LOGO_SVG_PATH = "templates/projectCreation/react/logo.svg";
 
-    @Override
-    public void create(ProjectCreation request) {
-        log.info("Creating static assets for project type {}", request.getType());
-        Path cssFolder = Paths.get(request.getRootDir(), "static", "css");
-        cssFolder.toFile().mkdirs();
-        Path imagesFolder = Paths.get(request.getRootDir(), "static", "images");
-        imagesFolder.toFile().mkdirs();
-        InputStream isIndexCss = this.fileProcessor.loadResourceFromClassPath(INDEX_CSS_TPL_PATH);
-        File indexCss = this.fileProcessor.touch(cssFolder.resolve("index.css"));
-        this.fileProcessor.copy(isIndexCss, indexCss);
+	@VisibleForTesting
+	static final String FAVICON_ICO_PATH = "templates/projectCreation/react/favicon.ico";
 
-        InputStream isAppCss = this.fileProcessor.loadResourceFromClassPath(APP_CSS_TPL_PATH);
-        File appCss = this.fileProcessor.touch(cssFolder.resolve("App.css"));
-        this.fileProcessor.copy(isAppCss, appCss);
+	private final FileProcessor fileProcessor;
 
-        InputStream isLogo = this.fileProcessor.loadResourceFromClassPath(LOGO_SVG_PATH);
-        File logo = this.fileProcessor.touch(imagesFolder.resolve("logo.svg"));
-        this.fileProcessor.copy(isLogo, logo);
+	public StaticAssetsCreator(FileProcessor fileProcessor) {
+		this.fileProcessor = checkNotNull(fileProcessor);
+	}
 
-        InputStream isFavicon = this.fileProcessor.loadResourceFromClassPath(FAVICON_ICO_PATH);
-        File favicon = this.fileProcessor.touch(imagesFolder.resolve("favicon.ico"));
-        this.fileProcessor.copy(isFavicon, favicon);
-    }
+	@Override
+	public void create(ProjectCreation request) {
+		log.info("Creating static assets for project type {}", request.getType());
+		Path cssFolder = Paths.get(request.getRootDir(), "static", "css");
+		cssFolder.toFile().mkdirs();
+		Path imagesFolder = Paths.get(request.getRootDir(), "static", "images");
+		imagesFolder.toFile().mkdirs();
+		InputStream isIndexCss = this.fileProcessor
+				.loadResourceFromClassPath(INDEX_CSS_TPL_PATH);
+		File indexCss = this.fileProcessor.touch(cssFolder.resolve("index.css"));
+		this.fileProcessor.copy(isIndexCss, indexCss);
+
+		InputStream isAppCss = this.fileProcessor
+				.loadResourceFromClassPath(APP_CSS_TPL_PATH);
+		File appCss = this.fileProcessor.touch(cssFolder.resolve("App.css"));
+		this.fileProcessor.copy(isAppCss, appCss);
+
+		InputStream isLogo = this.fileProcessor.loadResourceFromClassPath(LOGO_SVG_PATH);
+		File logo = this.fileProcessor.touch(imagesFolder.resolve("logo.svg"));
+		this.fileProcessor.copy(isLogo, logo);
+
+		InputStream isFavicon = this.fileProcessor
+				.loadResourceFromClassPath(FAVICON_ICO_PATH);
+		File favicon = this.fileProcessor.touch(imagesFolder.resolve("favicon.ico"));
+		this.fileProcessor.copy(isFavicon, favicon);
+	}
+
 }

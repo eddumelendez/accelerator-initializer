@@ -25,25 +25,29 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @React
 class AppSpecJsCreator implements FileCreator<ProjectCreation> {
 
-    private static final String APP_SPEC_JS_TPL_PATH = "templates/projectCreation/react/App_spec.js.tpl";
-    private final FileProcessor fileProcessor;
+	private static final String APP_SPEC_JS_TPL_PATH = "templates/projectCreation/react/App_spec.js.tpl";
 
-    public AppSpecJsCreator(FileProcessor fileProcessor) {
-        this.fileProcessor = checkNotNull(fileProcessor);
-    }
+	private final FileProcessor fileProcessor;
 
-    @Override
-    public void create(ProjectCreation request) {
-        log.info("Creating App_spec.js file");
-        InputStream inputStream = this.fileProcessor.loadResourceFromClassPath(APP_SPEC_JS_TPL_PATH);
-        Path integrationTestPath = Paths.get(request.getRootDir(), IntegrationTestFolderCreator.INTEGRATION_TEST_PATH);
-        Path appSpecJsPath = Paths.get("App_spec.js");
-        File appSpecJs = fileProcessor.touch(integrationTestPath.resolve(appSpecJsPath));
-        this.fileProcessor.copy(inputStream, appSpecJs);
-    }
-    
-    @Override
-    public int order() {
-        return FileCreationOrder.APP_SPEC_JS.order();
-    }
+	public AppSpecJsCreator(FileProcessor fileProcessor) {
+		this.fileProcessor = checkNotNull(fileProcessor);
+	}
+
+	@Override
+	public void create(ProjectCreation request) {
+		log.info("Creating App_spec.js file");
+		InputStream inputStream = this.fileProcessor
+				.loadResourceFromClassPath(APP_SPEC_JS_TPL_PATH);
+		Path integrationTestPath = Paths.get(request.getRootDir(),
+				IntegrationTestFolderCreator.INTEGRATION_TEST_PATH);
+		Path appSpecJsPath = Paths.get("App_spec.js");
+		File appSpecJs = fileProcessor.touch(integrationTestPath.resolve(appSpecJsPath));
+		this.fileProcessor.copy(inputStream, appSpecJs);
+	}
+
+	@Override
+	public int order() {
+		return FileCreationOrder.APP_SPEC_JS.order();
+	}
+
 }

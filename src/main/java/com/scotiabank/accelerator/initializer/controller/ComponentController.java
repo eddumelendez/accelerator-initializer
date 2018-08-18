@@ -24,43 +24,45 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Slf4j
 public class ComponentController {
 
-    private static final String TEMP_PATH = "%s/%s";
+	private static final String TEMP_PATH = "%s/%s";
 
-    private final ProjectCreationService projectCreationService;
-    private final FileProcessor fileProcessor;
-    private final String rootDir;
+	private final ProjectCreationService projectCreationService;
 
-    public ComponentController(ProjectCreationService projectCreationService, FileProcessor fileProcessor, String rootDir) {
-        this.projectCreationService = checkNotNull(projectCreationService);
-        this.fileProcessor = checkNotNull(fileProcessor);
-        this.rootDir = checkNotNull(rootDir);
-    }
+	private final FileProcessor fileProcessor;
 
-    @PostMapping("/api/project/generate")
-    public ResponseEntity<byte[]> userDownload(@Validated @RequestBody ProjectProperties component) {
-        byte[] content = projectCreationService.create(convertToProjectCreation(component));
+	private final String rootDir;
 
-        String contentDispositionValue = "attachment; filename=\"" + component.getName() + ".zip\"";
-        return ResponseEntity.ok()
-                .header("Content-Type", "application/zip")
-                .header("Content-Disposition", contentDispositionValue)
-                .body(content);
-    }
+	public ComponentController(ProjectCreationService projectCreationService,
+			FileProcessor fileProcessor, String rootDir) {
+		this.projectCreationService = checkNotNull(projectCreationService);
+		this.fileProcessor = checkNotNull(fileProcessor);
+		this.rootDir = checkNotNull(rootDir);
+	}
 
-    private ProjectCreation convertToProjectCreation(ProjectProperties request) {
-        return  ProjectCreation.builder()
-                .group(request.getGroup())
-                .name(request.getName())
-                .type(request.getType())
-                .rootDir(initProjectDir(request))
-                .build();
-    }
+	@PostMapping("/api/project/generate")
+	public ResponseEntity<byte[]> userDownload(
+			@Validated @RequestBody ProjectProperties component) {
+		byte[] content = projectCreationService
+				.create(convertToProjectCreation(component));
 
-    private String initProjectDir(ProjectProperties request) {
-        String projectName = String.format(TEMP_PATH, request.getGroup().toLowerCase(), request.getName().toLowerCase());
-        File path = Paths.get(rootDir, projectName).toFile();
-        fileProcessor.createDirectories(path);
-        log.info("Creating path {} ", path);
-        return path.getAbsolutePath();
-    }
+		String contentDispositionValue = "attachment; filename=\"" + component.getName()
+				+ ".zip\"";
+		return ResponseEntity.ok().header("Content-Type", "application/zip")
+				.header("Content-Disposition", contentDispositionValue).body(content);
+	}
+
+	private ProjectCreation convertToProjectCreation(ProjectProperties request) {
+		return ProjectCreation.builder().group(request.getGroup()).name(request.getName())
+				.type(request.getType()).rootDir(initProjectDir(request)).build();
+	}
+
+	private String initProjectDir(ProjectProperties request) {
+		String projectName = String.format(TEMP_PATH, request.getGroup().toLowerCase(),
+				request.getName().toLowerCase());
+		File path = Paths.get(rootDir, projectName).toFile();
+		fileProcessor.createDirectories(path);
+		log.info("Creating path {} ", path);
+		return path.getAbsolutePath();
+	}
+
 }

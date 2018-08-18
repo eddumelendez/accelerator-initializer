@@ -25,36 +25,35 @@ import org.mockito.MockitoAnnotations;
 import com.scotiabank.accelerator.initializer.core.FileProcessor;
 
 public class PackageInfoCreatorTest {
-    
-    @Mock
-    private FileProcessor fileProcessor;
-    @Captor
-    private ArgumentCaptor<Path> pathCaptor;
-    
-    private FileCreator<ProjectCreation> creator;
-    
-    @Before
-    public void before() {
-        MockitoAnnotations.initMocks(this);
-        this.creator = new PackageInfoCreator(fileProcessor);
-    }
-    
-    @Test
-    public void assertOrder() {
-        assertTrue(creator.order() == FileCreationOrder.PACKAGE_INFO_TEST.order());
-        assertTrue(creator.order() > FileCreationOrder.JAVA_PACKAGES.order());
-    }
-    
-    @Test
-    public void assertPackageInfoIsCreated() {
-        ProjectCreation request = ProjectCreation.builder()
-                        .group("hopper")
-                        .rootDir(".")
-                        .build();
-        this.creator.create(request);
-        verify(this.fileProcessor, times(1)).touch(pathCaptor.capture());
-        Path path = pathCaptor.getValue();
-        assertEquals(Paths.get("./src/test/java/com/hopper/package-info.java"), path);
-    }
-    
+
+	@Mock
+	private FileProcessor fileProcessor;
+
+	@Captor
+	private ArgumentCaptor<Path> pathCaptor;
+
+	private FileCreator<ProjectCreation> creator;
+
+	@Before
+	public void before() {
+		MockitoAnnotations.initMocks(this);
+		this.creator = new PackageInfoCreator(fileProcessor);
+	}
+
+	@Test
+	public void assertOrder() {
+		assertTrue(creator.order() == FileCreationOrder.PACKAGE_INFO_TEST.order());
+		assertTrue(creator.order() > FileCreationOrder.JAVA_PACKAGES.order());
+	}
+
+	@Test
+	public void assertPackageInfoIsCreated() {
+		ProjectCreation request = ProjectCreation.builder().group("hopper").rootDir(".")
+				.build();
+		this.creator.create(request);
+		verify(this.fileProcessor, times(1)).touch(pathCaptor.capture());
+		Path path = pathCaptor.getValue();
+		assertEquals(Paths.get("./src/test/java/com/hopper/package-info.java"), path);
+	}
+
 }

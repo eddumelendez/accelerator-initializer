@@ -27,43 +27,43 @@ import org.mockito.MockitoAnnotations;
 import com.scotiabank.accelerator.initializer.core.FileProcessor;
 
 public class JavaIntegrationTestSrcCreatorTest {
-    
-    
-    @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
-    @Mock
-    private FileProcessor fileProcessor;
-    @Captor
-    private ArgumentCaptor<File> fileCaptor;
-    private FileCreator<ProjectCreation> srcFileCreator;
 
-    @Before
-    public void before() {
-        MockitoAnnotations.initMocks(this);
-        this.srcFileCreator = new JavaIntegrationTestSrcCreator(fileProcessor);
-    }
+	@Rule
+	public TemporaryFolder folder = new TemporaryFolder();
 
-    @Test
-    public void assertOrderIsBiggerThanSrcCreator() {
-        assertTrue(srcFileCreator.order() > FileCreationOrder.SRC_FOLDER.order());
-    }
+	@Mock
+	private FileProcessor fileProcessor;
 
-    @Test
-    public void assertFolderIsCreated() throws IOException {
-        ProjectCreation request = ProjectCreation.builder()
-                .rootDir(folder.getRoot().getAbsolutePath())
-                .build();
-        srcFileCreator.create(request);
-        verify(fileProcessor, times(2)).createDirectories(this.fileCaptor.capture());
-        assertTrue(this.fileCaptor
-            .getAllValues()
-            .stream()
-            .map(File::toPath)
-            .allMatch(this::srcIsCreatedUnderRootFolder));
-    }
-    
-    private boolean srcIsCreatedUnderRootFolder(Path input) {
-        return input.equals(folder.getRoot().toPath().resolve("src/acceptanceTest/java"))
-               || input.equals(folder.getRoot().toPath().resolve("src/acceptanceTest/resources"));
-    }
+	@Captor
+	private ArgumentCaptor<File> fileCaptor;
+
+	private FileCreator<ProjectCreation> srcFileCreator;
+
+	@Before
+	public void before() {
+		MockitoAnnotations.initMocks(this);
+		this.srcFileCreator = new JavaIntegrationTestSrcCreator(fileProcessor);
+	}
+
+	@Test
+	public void assertOrderIsBiggerThanSrcCreator() {
+		assertTrue(srcFileCreator.order() > FileCreationOrder.SRC_FOLDER.order());
+	}
+
+	@Test
+	public void assertFolderIsCreated() throws IOException {
+		ProjectCreation request = ProjectCreation.builder()
+				.rootDir(folder.getRoot().getAbsolutePath()).build();
+		srcFileCreator.create(request);
+		verify(fileProcessor, times(2)).createDirectories(this.fileCaptor.capture());
+		assertTrue(this.fileCaptor.getAllValues().stream().map(File::toPath)
+				.allMatch(this::srcIsCreatedUnderRootFolder));
+	}
+
+	private boolean srcIsCreatedUnderRootFolder(Path input) {
+		return input.equals(folder.getRoot().toPath().resolve("src/acceptanceTest/java"))
+				|| input.equals(folder.getRoot().toPath()
+						.resolve("src/acceptanceTest/resources"));
+	}
+
 }

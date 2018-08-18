@@ -19,22 +19,23 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Component
 class SpringBootProjectCreatorImpl implements ProjectCreator<ProjectCreation> {
 
-    private List<FileCreator<ProjectCreation>> fileCreators;
+	private List<FileCreator<ProjectCreation>> fileCreators;
 
-    public SpringBootProjectCreatorImpl(@SpringBoot List<FileCreator<ProjectCreation>> fileCreators) {
-        this.fileCreators = checkNotNull(fileCreators);
-    }
+	public SpringBootProjectCreatorImpl(
+			@SpringBoot List<FileCreator<ProjectCreation>> fileCreators) {
+		this.fileCreators = checkNotNull(fileCreators);
+	}
 
-    @Override
-    public boolean skip(ProjectCreation projectCreation) {
-        return ApplicationType.JAVA_SPRING_BOOT != projectCreation.getType() && ApplicationType.JAVA_SPRING_BOOT_2 != projectCreation.getType();
-    }
+	@Override
+	public boolean skip(ProjectCreation projectCreation) {
+		return ApplicationType.JAVA_SPRING_BOOT != projectCreation.getType()
+				&& ApplicationType.JAVA_SPRING_BOOT_2 != projectCreation.getType();
+	}
 
-    @Override
-    public void create(ProjectCreation request) {
-        fileCreators
-                .stream()
-                .sorted(Comparator.comparingInt(FileCreator::order))
-                .forEach(creator -> creator.create(request));
-    }
+	@Override
+	public void create(ProjectCreation request) {
+		fileCreators.stream().sorted(Comparator.comparingInt(FileCreator::order))
+				.forEach(creator -> creator.create(request));
+	}
+
 }
