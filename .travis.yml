@@ -14,7 +14,7 @@ cache:
   directories:
   - "$HOME/.gradle/caches/"
   - "$HOME/.gradle/wrapper/"
-script: "./gradlew clean check prepareForPublish"
+script: "./gradlew clean check prepareForPublish --scan"
 deploy:
   provider: bintray
   file: "artifact.json"
